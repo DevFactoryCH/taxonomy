@@ -1,0 +1,23 @@
+{
+    "name": "devfactory/taxonomy",
+    "description": "",
+    "authors": [
+        {
+            "name": "xdubois",
+            "email": "mathieu.dubois@devfactory.ch"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Devfactory\\Taxonomy\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
