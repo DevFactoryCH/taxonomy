@@ -11,34 +11,8 @@ class TermRelation extends Eloquent {
 
 	public function term() {
 
-		return $this->belongsTo('term');
+		return $this->belongsTo('Devfactory\Taxonomy\Term');
 	}
-
-
-
-	public static function getTerms($object, $object_id, $tolist = false, $byId = true) {
-
-		if($tolist) {
-			$list = array();
-			$terms = TermRelation::where('object_id', $object_id)->where('object_type', $object)->get();
-
-			if($byId) {
-				foreach($terms as $t) {
-					$list[$t->id] = $t->term->value;
-				}
-			}
-			else {
-				foreach($terms as $t) {
-					$list[$t->term->value] = $t->term->value;
-				}
-			}
-			return $list;
-		}
-		else {
-			return TermRelation::where('object_id', $object_id)->where('object_type', $object_id)->get();
-			
-		}
-
 	}
 
 

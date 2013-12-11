@@ -7,4 +7,10 @@ class Term extends Eloquent {
 
 	public static $rules = array(
 		'value' => 'required');
+
+
+	public function vocabulary() {
+
+		return $this->belongsTo('Devfactory\Taxonomy\Vocabulary');
+	}
 }

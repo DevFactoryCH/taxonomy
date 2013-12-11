@@ -13,7 +13,7 @@ class Vocabulary extends Eloquent {
 
 	public function terms() {
 
-		return $this->HasMany('term');
+		return $this->HasMany('Devfactory\Taxonomy\Term');
 	}
 
 }
