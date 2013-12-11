@@ -11,6 +11,10 @@ in config/app.php providers
 
 'Devfactory\Taxonomy\TaxonomyServiceProvider'
 
+publish config
+--------------
+php artisan config:publish devfactory/taxonomy
+
 
 Migrate tables :
 ----------------
