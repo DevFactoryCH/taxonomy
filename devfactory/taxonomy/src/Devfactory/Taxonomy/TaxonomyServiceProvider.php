@@ -28,7 +28,16 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		$this->app['taxonomy'] = $this->app->share(function($app)
+		{
+		    return new Taxonomy;
+		});
+
+		$this->app->booting(function()
+		{
+		  $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+		  $loader->alias('Taxonomy', 'Devfactory\Taxonomy\TaxonomyFacade');
+		});
 	}
 
 	/**
@@ -38,7 +47,9 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('taxonomy');
 	}
-
+	
+	
+	
 }
