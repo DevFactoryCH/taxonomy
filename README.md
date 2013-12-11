@@ -16,3 +16,11 @@ Migrate tables :
 ----------------
 
 php artisan migrate --package=devfactory/taxonomy
+
+
+Extends the models (optionnal)
+------------------------------
+
+use Devfactory\Taxonomy\Term as taxoTermModel;
+
+class User extends taxoTermModel { }
