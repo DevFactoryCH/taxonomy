@@ -11,10 +11,10 @@ class CreateTermsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('terms', function(Blueprint $table) {
+		Schema::create('terms', function($table) {
 			$table->increments('id');
 			$table->integer('vocabulary_id')->unsigned();
-			$table->foreign('vocabulary_id')->references('id')->on('vocabularies');
+			$table->foreign('vocabulary_id')->references('id')->on('vocabularies')->onDelete('cascade');
 			$table->string('value');
 			$table->timestamps();
 		});

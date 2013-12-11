@@ -11,7 +11,7 @@ class CreateTermRelationsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('term_relations', function(Blueprint $table) {
+		Schema::create('term_relations', function($table) {
 			$table->increments('id');
 			$table->integer('term_id')->unsigned();
 			$table->integer('object_id')->unsigned(); 
