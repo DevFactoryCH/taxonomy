@@ -19,6 +19,9 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$this->package('devfactory/taxonomy');
+		$this->package('devfactory/taxonomy/config/config.php');
+		include __DIR__.'/../../routes.php';
+		
 	}
 
 	/**

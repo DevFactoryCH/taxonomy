@@ -22,7 +22,6 @@ class Taxonomy {
 
 		if($withID) {
 			$vocs = Term::where('vocabulary_id', $voc_id)->lists('value', 'id');
-			
 		}
 		else {
 			$vocs = Term::where('vocabulary_id', $voc_id)->lists('value', 'value');
