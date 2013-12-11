@@ -1,6 +1,6 @@
 {
     "name": "devfactory/taxonomy",
-    "description": "",
+    "description": "test package",
     "authors": [
         {
             "name": "xdubois",
@@ -8,6 +8,10 @@
         }
     ],
     "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "*"
+    },
+     "require-dev": {
         "php": ">=5.3.0",
         "illuminate/support": "4.0.*"
     },
