@@ -1,4 +1,5 @@
 <?php
+
 $prefix = Config::get('taxonomy::route_prefix');
 
 #voc management
