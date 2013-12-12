@@ -18,6 +18,7 @@ class Taxonomy {
    * 
    * @return array
    */
+	 				//getAllTerms()
 	public function getVocabularyToList($voc_id, $withID = true) {
 
 		if($withID) {
@@ -36,7 +37,7 @@ class Taxonomy {
    * @param $object_id The id of the object
    * @param $voc_id The vocabulary id
    */
-	public function linkVocabulary($voc_id, $object_type, $object_id) {
+	public function setVocabulary($voc_id, $object_type, $object_id) {
 		$terms = Term::where('vocabulary_id', $voc_id)->get();
 		foreach($terms as $t) {
 			$r = new TermRelation();
@@ -47,6 +48,8 @@ class Taxonomy {
 		}
 
 	}
+
+
 
 
 

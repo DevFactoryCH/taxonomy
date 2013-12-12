@@ -30,8 +30,8 @@
 		<tr>
 			<td>{{ $v->created_at->format('M jS, Y') }}</td>
 			<td>{{ $v->value}}</td>
-			<td>@foreach($v->terms as $t)
-					[ {{ $t->value}} ]
+			<td>@foreach ($v->terms as $t)
+					[ {{ $t->value}} ] 
 				@endforeach 
 			<td>
 				<a href="{{ URL::to(Config::get('taxonomy::route_prefix').'/vocabularies/edit', $v->id) }}" class="btn btn-mini">@lang('button.edit')</a>		

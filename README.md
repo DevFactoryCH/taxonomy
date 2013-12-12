@@ -26,5 +26,10 @@ Extends the models (optionnal)
 ------------------------------
 
 use Devfactory\Taxonomy\Term as taxoTermModel;
+class Term extends taxoTermModel { }
 
-class User extends taxoTermModel { }
+use Devfactory\Taxonomy\TermRelation as taxoTermRelationModel;
+class TermRelation extends taxoTermRelationModel { }
+
+use Devfactory\Taxonomy\TermRelation as taxoVocabularyModel;
+class Vocabulary extends V { }

@@ -13,7 +13,6 @@ class TermRelation extends Eloquent {
 
 		return $this->belongsTo('Devfactory\Taxonomy\Term');
 	}
-	}
 
 
 
