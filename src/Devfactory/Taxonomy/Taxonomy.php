@@ -75,6 +75,25 @@ class Taxonomy {
 
 	}
 
+	public function getTermsByVocabularyName($name, $toList = false, $withID = true) {
+		$voc = Vocabulary::where('value', $name);
+		if($voc != null) {
+			if($toList) {
+				if($withID) {
+					$vocs = $terms->lists('value', 'id');
+				}
+				else {
+					$vocs = $terms->lists('value', 'value');
+				}
+			}
+			else {
+				$vocs = $terms->get();
+			}
+		}
+		return $vocs;
+
+	}
+
 	public function tagObject($tid, $object_id, $object_type) {
 		$termRelation = new TermRelation();
 		$termRelation->term_id = $tid;
