@@ -30,7 +30,13 @@ class Taxonomy {
 	public function termSave($vid, $term) {
 		$vocabulary = Vocabulary::find($vid);
 		if($vocabulary != null) {
-			return $vocabulary->terms()->save(new Term(array('value' => $term)));
+			$termValid = $vocabulary->terms()->where('value', $term)->first();
+			if($termValid != null) {
+				return $termValid;
+			}
+			else {
+				return $vocabulary->terms()->save(new Term(array('value' => $term)));
+			}
 		}
 		return false;
 	}
@@ -95,11 +101,13 @@ class Taxonomy {
 	}
 
 	public function tagObject($tid, $object_id, $object_type) {
-		$termRelation = new TermRelation();
-		$termRelation->term_id = $tid;
-		$termRelation->object_id = $object_id;
-		$termRelation->object_type = $object_type;
-		$termRelation->save();
+		if(TermRelation::where('term_id', $tid)->where('object_id', $object_id)->where('object_type', $object_type)->count() < 1) {
+			$termRelation = new TermRelation();
+			$termRelation->term_id = $tid;
+			$termRelation->object_id = $object_id;
+			$termRelation->object_type = $object_type;
+			$termRelation->save();
+		}
 	}
 
 	public function removeTag($tid, $object_id, $object_type) {
