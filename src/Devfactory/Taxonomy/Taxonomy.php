@@ -120,4 +120,11 @@ class Taxonomy {
 
 	}
 
+	public function getTermsRelation($vid, $object_id, $object_type) {
+
+		return TermRelation::where('vocabulary_id', $tid)
+									->where('object_id', $object_id)
+									->where('object_type', $object_type);
+	}
+
 }

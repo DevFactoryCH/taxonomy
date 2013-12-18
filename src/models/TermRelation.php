@@ -15,6 +15,12 @@ class TermRelation extends Eloquent {
 	}
 
 
+	public function vocabulary() {
+
+		return $this->belongsTo('Devfactory\Taxonomy\Vocabulary');
+	}
+
+
 
 
 
