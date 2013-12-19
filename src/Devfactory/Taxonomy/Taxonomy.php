@@ -100,10 +100,11 @@ class Taxonomy {
 
 	}
 
-	public function tagObject($tid, $object_id, $object_type) {
-		if(TermRelation::where('term_id', $tid)->where('object_id', $object_id)->where('object_type', $object_type)->count() < 1) {
+	public function tagObject($tid, $vid, $object_id, $object_type) {
+		if(TermRelation::where('term_id', $tid)->where('object_id', $object_id)->where('object_type', $object_type)->where('vocabulary_id', $vid)->count() < 1) {
 			$termRelation = new TermRelation();
 			$termRelation->term_id = $tid;
+			$termRelation->vocabulary_id = $vid;
 			$termRelation->object_id = $object_id;
 			$termRelation->object_type = $object_type;
 			$termRelation->save();
@@ -120,11 +121,18 @@ class Taxonomy {
 
 	}
 
+	public function detachTags($vid, $object_id, $object_type) {
+		return TermRelation::where('object_id', $object_id)
+							->where('object_type', $object_type)
+							->where('vocabulary_id', $vid)
+							->delete();
+	}
+
 	public function getTermsRelation($vid, $object_id, $object_type) {
 
-		return TermRelation::where('vocabulary_id', $tid)
+		return TermRelation::where('vocabulary_id', $vid)
 									->where('object_id', $object_id)
-									->where('object_type', $object_type);
+									->where('object_type', $object_type)->get();
 	}
 
 }
