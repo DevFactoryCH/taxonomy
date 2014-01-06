@@ -34,4 +34,4 @@ class CreateTermRelationsTable extends Migration {
 		Schema::dropIfExists('term_relations');
 	}
 
-}
+}	

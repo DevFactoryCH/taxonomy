@@ -2,6 +2,18 @@
 
 class Taxonomy {
 
+
+
+
+	public function createVocabulary($vocName, $vid = null) {
+		$voc = new Vocabulary();
+		$voc->value = $vocName;
+		if($vid != null) {
+			$voc->id = $vid;
+		}
+		$voc->save();
+	}
+
    /**
    * Link a entire vocabulary with an object
    * @param $object_type The name of the object
