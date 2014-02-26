@@ -2,9 +2,6 @@
 
 class Taxonomy {
 
-
-
-
 	public function createVocabulary($vocName, $vid = null) {
 		$voc = new Vocabulary();
 		$voc->value = $vocName;
@@ -123,6 +120,7 @@ class Taxonomy {
 		}
 	}
 
+	//detach a tags from an object by term_id
 	public function removeTag($tid, $object_id, $object_type) {
 		$termRelation = TermRelation::where('term_id', $tid)
 									->where('object_id', $object_id)
@@ -133,6 +131,7 @@ class Taxonomy {
 
 	}
 
+	//detach a tags from an object by vid
 	public function detachTags($vid, $object_id, $object_type) {
 		return TermRelation::where('object_id', $object_id)
 							->where('object_type', $object_type)
@@ -145,6 +144,37 @@ class Taxonomy {
 		return TermRelation::where('vocabulary_id', $vid)
 									->where('object_id', $object_id)
 									->where('object_type', $object_type)->get();
+	}
+
+	//remove and delete relation of a term
+	public function removeTerm($vid, $term_id) {
+		Term::destroy($term_id);
+		TermRelation::where('vocabulary_id', $vid)
+									->where('term_id', $term_id)
+									->delete();
+	}
+
+	public function removeVocabulary($vid) {
+		$voc = Vocabulary::find($vid);
+		if($voc != null) {
+			$voc->terms()->delete();
+			$voc->relations()->delete();
+			$voc->delete();
+
+		}
+
+	}
+
+	public function updateTerm($id, $value) {
+		$term = Term::find($id);
+		if($term != null && $value != "" ) {
+			$term->value = $value;
+			$term->save();
+		}
+	}
+
+	public function getTerm($id) {
+		return Term::find($id);
 	}
 
 }
