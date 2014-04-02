@@ -117,6 +117,8 @@ class Taxonomy {
 			$termRelation->object_id = $object_id;
 			$termRelation->object_type = $object_type;
 			$termRelation->save();
+
+			return $termRelation;
 		}
 	}
 
@@ -139,11 +141,14 @@ class Taxonomy {
 							->delete();
 	}
 
+
+
 	public function getTermsRelation($vid, $object_id, $object_type) {
 
 		return TermRelation::where('vocabulary_id', $vid)
 									->where('object_id', $object_id)
-									->where('object_type', $object_type)->get();
+									->where('object_type', $object_type)
+									->get();
 	}
 
 	//remove and delete relation of a term
