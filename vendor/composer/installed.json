@@ -1,18 +1,18 @@
 [
     {
         "name": "illuminate/support",
-        "version": "4.0.x-dev",
-        "version_normalized": "4.0.9999999.9999999-dev",
+        "version": "v4.0.10",
+        "version_normalized": "4.0.10.0",
         "target-dir": "Illuminate/Support",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
-            "reference": "11ae214c05cce720abeac5443df3f1c27c7eae31"
+            "reference": "24ac5601b3f6781c8b54a12ed5e4ddb7f34d7953"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/support/zipball/11ae214c05cce720abeac5443df3f1c27c7eae31",
-            "reference": "11ae214c05cce720abeac5443df3f1c27c7eae31",
+            "url": "https://api.github.com/repos/illuminate/support/zipball/24ac5601b3f6781c8b54a12ed5e4ddb7f34d7953",
+            "reference": "24ac5601b3f6781c8b54a12ed5e4ddb7f34d7953",
             "shasum": ""
         },
         "require": {
@@ -23,7 +23,7 @@
             "patchwork/utf8": "1.1.*",
             "phpunit/phpunit": "3.7.*"
         },
-        "time": "2013-12-05 19:57:51",
+        "time": "2013-11-20 14:44:26",
         "type": "library",
         "extra": {
             "branch-alias": {
