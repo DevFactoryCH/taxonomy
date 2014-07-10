@@ -153,10 +153,10 @@ class Taxonomy {
 
 	//remove and delete relation of a term
 	public function removeTerm($vid, $term_id) {
-		Term::destroy($term_id);
 		TermRelation::where('vocabulary_id', $vid)
 									->where('term_id', $term_id)
 									->delete();
+		Term::destroy($term_id);
 	}
 
 	public function removeVocabulary($vid) {
