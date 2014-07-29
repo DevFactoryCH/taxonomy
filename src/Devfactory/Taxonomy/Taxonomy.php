@@ -91,8 +91,9 @@ class Taxonomy {
 	}
 
 	public function getTermsByVocabularyName($name, $toList = false, $withID = true) {
-		$voc = Vocabulary::where('value', $name);
+		$voc = Vocabulary::where('value', $name)->first();
 		if($voc != null) {
+			$terms = $voc->terms();
 			if($toList) {
 				if($withID) {
 					$vocs = $terms->lists('value', 'id');
