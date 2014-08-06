@@ -105,9 +105,9 @@ class Taxonomy {
 			else {
 				$vocs = $terms->get();
 			}
+			return $vocs;
 		}
-		return $vocs;
-
+		return FALSE;
 	}
 
 	public function tagObject($tid, $vid, $object_id, $object_type) {
