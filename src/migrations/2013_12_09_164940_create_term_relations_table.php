@@ -13,13 +13,10 @@ class CreateTermRelationsTable extends Migration {
 	{
 		Schema::create('term_relations', function($table) {
 			$table->increments('id');
-			$table->integer('vocabulary_id')->unsigned();
+			$table->integer('relationable_id')->unsigned();
+			$table->string('relationable_type');
 			$table->integer('term_id')->unsigned();
-			$table->integer('object_id')->unsigned(); 
-			$table->string('object_type'); 
-
 			$table->foreign('term_id')->references('id')->on('terms');
-			$table->foreign('vocabulary_id')->references('id')->on('vocabularies');
 			$table->timestamps();
 		});
 	}
@@ -34,4 +31,4 @@ class CreateTermRelationsTable extends Migration {
 		Schema::dropIfExists('term_relations');
 	}
 
-}	
+}

@@ -15,7 +15,7 @@ class CreateTermsTable extends Migration {
 			$table->increments('id');
 			$table->integer('vocabulary_id')->unsigned();
 			$table->foreign('vocabulary_id')->references('id')->on('vocabularies')->onDelete('cascade');
-			$table->string('value');
+			$table->string('name');
 			$table->timestamps();
 		});
 	}

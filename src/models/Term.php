@@ -3,14 +3,16 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Term extends Eloquent {
 
-	protected $guarded = array();
+	public static $rules = [
+		'name' => 'required'
+  ];
 
-	public static $rules = array(
-		'value' => 'required');
-
+  public function termRelation() {
+    return $this->morphMany('TermRelation', 'relationable');
+  }
 
 	public function vocabulary() {
-
 		return $this->belongsTo('Devfactory\Taxonomy\Vocabulary');
 	}
+
 }

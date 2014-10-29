@@ -65,9 +65,8 @@ class Taxonomy {
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
   public function deleteVocabulary($id) {
-    // Find the Vocabulary using the vocabulary id
     $vocabulary = $this->vocabulary->findOrFail($id);
-    // Delete the Vocabulary
+
     return $vocabulary->delete();
   }
 
