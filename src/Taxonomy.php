@@ -28,6 +28,32 @@ class Taxonomy {
 	}
 
   /**
+   * Get a Vocabulary by ID
+   *
+   * @param int $id
+   *  The id of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getVocabulary($id) {
+    return $this->vocabulary->find($id);
+  }
+
+  /**
+   * Get a Vocabulary by name
+   *
+   * @param string $name
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getVocabularyByName($name) {
+    return $this->vocabulary->where('name', $name);
+  }
+
+  /**
    * Delete a Vocabulary by ID
    *
    * @param int $id

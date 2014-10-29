@@ -122,6 +122,44 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Test the retrieval of a Vocabulary by ID
+   */
+  public function testTaxonomyGetVocabulary() {
+    // Prepare data
+    $id = 1;
+
+    $this->vocabularyModel
+      ->shouldReceive('find')
+      ->with($id)
+      ->andReturn(TRUE);
+
+    // Act
+    $result = $this->taxonomy->getVocabulary($id);
+
+    // Assert
+    $this->assertTrue($result);
+  }
+
+  /**
+   * Test the retrieval of a Vocabulary by ID
+   */
+  public function testTaxonomyGetVocabularyByName() {
+    // Prepare data
+    $name = 'MOCK_NAME';
+
+    $this->vocabularyModel
+      ->shouldReceive('where')
+      ->with('name', $name)
+      ->andReturn(TRUE);
+
+    // Act
+    $result = $this->taxonomy->getVocabularyByName($name);
+
+    // Assert
+    $this->assertTrue($result);
+  }
+
+  /**
    * Test the creation of a vocabulary term
    */
   public function testTaxonomyDeleteVocabulary() {
