@@ -31,13 +31,10 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-    $this->app['taxonomy'] = $this->app->share(function($app) {
-      return new Taxonomy;
-    });
 
-    $this->app['vocabulary'] = $this->app->share(function($app) {
-      return new Vocabulary();
-		});
+    $this->app['taxonomy'] = $this->app->share(function($app) {
+      return new Taxonomy();
+    });
 	}
 
 	/**
@@ -47,7 +44,7 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array('taxonomy', 'vocabulary');
+		return array('taxonomy');
 	}
 
 }

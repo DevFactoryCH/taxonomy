@@ -13,7 +13,7 @@ class CreateVocabulariesTable extends Migration {
 	{
 		Schema::create('vocabularies', function($table) {
 			$table->increments('id');
-			$table->string('value');
+			$table->string('name');
 			$table->timestamps();
 		});
 	}

@@ -1,17 +1,48 @@
 <?php namespace DevFactory\Taxonomy;
 
+use DevFactory\Taxonomy\Models\Vocabulary;
+
 class Taxonomy {
 
-  public function createVocabulary($name, $vid = null) {
-		Vocabulary::create(['name' => $name]);
+  protected $vocabulary;
 
-    $this->vocabulary->name = $name;
+  public function __construct(Vocabulary $vocabulary) {
+    $this->vocabulary = $vocabulary;
+  }
 
-		if (!is_null($vid)) {
-			$this->vocabulary->id = $vid;
-		}
+  /**
+   * Create a new Vocabulary with the given name
+   *
+   * @param string $name
+   *  The name of the Vocabulary
+   *
+   * @return bool
+   *  TRUE if vocabulary created, otherwise FALSE
+   */
+  public function createVocabulary($name) {
+    if ($this->vocabulary->where('name', $name)->count()) {
+      throw new Exceptions\VocabularyExistsException();
+    }
 
-		$this->vocabulary->save();
+		return $this->vocabulary->create(['name' => $name]);
 	}
+
+  /**
+   * Delete a Vocabulary by ID
+   *
+   * @param int $id
+   *  The ID of the Vocabulary to delete
+   *
+   * @return bool
+   *  TRUE if Vocabulary is deletes, otherwise FALSE
+   *
+   * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
+   */
+  public function deleteVocabulary($id) {
+    // Find the Vocabulary using the vocabulary id
+    $vocabulary = $this->vocabulary->findOrFail($id);
+    // Delete the Vocabulary
+    return $vocabulary->delete();
+  }
 
 }

@@ -1,23 +1,22 @@
-<?php namespace Devfactory\Taxonomy;
-use Illuminate\Database\Eloquent\Model as Eloquent;
+<?php namespace DevFactory\Taxonomy\Models;
 
-class Vocabulary extends Eloquent {
-  protected $guarded = array();
+class Vocabulary extends \Eloquent {
+
+  protected $fillable = [
+    'name',
+  ];
 
   protected $table = 'vocabularies';
 
-  public static $rules = array(
-    'value' => 'required');
-
-
+  public static $rules = [
+    'value' => 'required'
+  ];
 
   public function terms() {
-
     return $this->HasMany('Devfactory\Taxonomy\Term');
   }
 
   public function relations() {
-
     return $this->HasMany('Devfactory\Taxonomy\TermRelation');
   }
 
