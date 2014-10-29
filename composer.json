@@ -1,29 +1,25 @@
 {
-    "name": "devfactory/taxonomy",
-    "description": "test package",
-    "authors": [
-        {
-            "name": "xdubois",
-            "email": "mathieu.dubois@devfactory.ch"
-        }
-    ],
-    "require": {
-        "php": ">=5.3.0",
-        "illuminate/support": "*"
-    },
-     "require-dev": {
-        "php": ">=5.3.0",
-        "illuminate/support": "4.0.*"
-    },
-    "autoload": {
-        "classmap": [
-            "src/migrations",
-			"src/models",
-			"src/controllers"
-        ],
-        "psr-0": {
-            "Devfactory\\Taxonomy\\": "src/"
-        }
-    },
-    "minimum-stability": "stable"
+  "name": "devfactory/taxonomy",
+  "description": "Create and manage a heirarchical taxonomy of terms within different vocabularies",
+  "license": "MIT",
+  "keywords": ["taxonomy"],
+  "authors": [
+    {
+      "name": "Mark Cameron",
+      "email": "mark.cameron@devfactory.ch"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/support": "4.1.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.0.*",
+    "mockery/mockery": "0.7.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "DevFactory\\Taxonomy\\": "src"
+    }
+  }
 }

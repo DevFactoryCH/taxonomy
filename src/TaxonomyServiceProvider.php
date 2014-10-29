@@ -1,6 +1,7 @@
 <?php namespace Devfactory\Taxonomy;
 
 use Illuminate\Support\ServiceProvider;
+use Devfactory\Taxonomy\Models\Vocabulary;
 
 class TaxonomyServiceProvider extends ServiceProvider {
 
@@ -9,7 +10,7 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 *
 	 * @var bool
 	 */
-	protected $defer = false;
+	protected $defer = FALSE;
 
 	/**
 	 * Bootstrap the application events.
@@ -18,10 +19,9 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('devfactory/taxonomy');
-		$this->package('devfactory/taxonomy/config/config.php');
-		include __DIR__.'/../../routes.php';
-		
+		$this->package('devfactory/taxonomy', 'taxonomy', __DIR__);
+
+		require __DIR__ . '/routes.php';
 	}
 
 	/**
@@ -31,15 +31,12 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app['taxonomy'] = $this->app->share(function($app)
-		{
-		    return new Taxonomy;
-		});
+    $this->app['taxonomy'] = $this->app->share(function($app) {
+      return new Taxonomy;
+    });
 
-		$this->app->booting(function()
-		{
-		  $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-		  $loader->alias('Taxonomy', 'Devfactory\Taxonomy\TaxonomyFacade');
+    $this->app['vocabulary'] = $this->app->share(function($app) {
+      return new Vocabulary();
 		});
 	}
 
@@ -50,9 +47,7 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array('taxonomy');
+		return array('taxonomy', 'vocabulary');
 	}
-	
-	
-	
+
 }
