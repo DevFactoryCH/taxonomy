@@ -1,4 +1,4 @@
-<?php
+<?php namespace DevFactory\Taxonomy;
 
 trait TaxonomyTrait {
 

@@ -20,8 +20,9 @@ class Taxonomy {
    * @param string $name
    *  The name of the Vocabulary
    *
-   * @return bool
-   *  TRUE if vocabulary created, otherwise FALSE
+   * @return mixed
+   *  The Vocabulary object if created, FALSE if error creating,
+   *  Exception if the vocabulary name already exists.
    */
   public function createVocabulary($name) {
     if ($this->vocabulary->where('name', $name)->count()) {
@@ -95,7 +96,6 @@ class Taxonomy {
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
   public function createTerm($vid, $name, $parent = 0, $weight = 0) {
-    print_r($name);
     if ($vocabulary = $this->vocabulary->findOrFail($vid)) {
       $term = [
         'name' => $name,
