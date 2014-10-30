@@ -76,11 +76,11 @@ class Taxonomy {
   /**
    * Create a new term in a specific vocabulary
    *
-   * @param string $name
-   *  The name of the term
-   *
    * @param int $vid
    *  The Vocabulary ID in which to add the term
+   *
+   * @param string $name
+   *  The name of the term
    *
    * @param int $parent
    *  The ID of the parent term if it is a child
@@ -93,8 +93,8 @@ class Taxonomy {
    *
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
-  public function createTerm($name, $vid, $parent = 0, $weight = 0) {
-    if ($vocabulary = $this->vocabulary->findOrFail($id);) {
+  public function createTerm($vid, $name, $parent = 0, $weight = 0) {
+    if ($vocabulary = $this->vocabulary->findOrFail($id)) {
       $term = [
         'name' => $name,
         'vocabulary_id' => $vid,
