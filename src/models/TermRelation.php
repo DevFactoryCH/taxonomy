@@ -1,5 +1,4 @@
-<?php namespace Devfactory\Taxonomy;
-use Illuminate\Database\Eloquent\Model as Eloquent;
+<?php namespace DevFactory\Taxonomy\Models;
 
 class TermRelation extends Eloquent {
 

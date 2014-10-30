@@ -1,6 +1,4 @@
-<?php namespace Devfactory\Taxonomy\Models;
-
-use Illuminate\Database\Eloquent\Model as Eloquent;
+<?php namespace DevFactory\Taxonomy\Models;
 
 class Term extends Eloquent {
 
