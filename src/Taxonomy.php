@@ -5,9 +5,12 @@ use DevFactory\Taxonomy\Models\Vocabulary;
 class Taxonomy {
 
   protected $vocabulary;
+  protected $term;
+  protected $term_relation;
 
-  public function __construct(Vocabulary $vocabulary) {
+  public function __construct(Vocabulary $vocabulary, Term $term) {
     $this->vocabulary = $vocabulary;
+    $this->term = $term;
   }
 
   /**
@@ -70,4 +73,36 @@ class Taxonomy {
     return $vocabulary->delete();
   }
 
+  /**
+   * Create a new term in a specific vocabulary
+   *
+   * @param string $name
+   *  The name of the term
+   *
+   * @param int $vid
+   *  The Vocabulary ID in which to add the term
+   *
+   * @param int $parent
+   *  The ID of the parent term if it is a child
+   *
+   * @param int $weight
+   *  The weight of the term in order to sort them inside the Vocabulary
+   *
+   * @return int
+   *  The ID of the created term
+   *
+   * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
+   */
+  public function createTerm($name, $vid, $parent = 0, $weight = 0) {
+    if ($vocabulary = $this->vocabulary->findOrFail($id);) {
+      $term = [
+        'name' => $name,
+        'vocabulary_id' => $vid,
+        'parent' => $parent,
+        'weight' => $weight,
+      ];
+
+      return $this->term->create($term);
+    }
+  }
 }

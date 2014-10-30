@@ -17,8 +17,7 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function boot()
-	{
+	public function boot() {
 		$this->package('devfactory/taxonomy', 'taxonomy', __DIR__);
 
 		require __DIR__ . '/routes.php';
@@ -29,9 +28,7 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function register()
-	{
-
+	public function register() {
     $this->app['taxonomy'] = $this->app->share(function($app) {
       return new Taxonomy();
     });
@@ -42,8 +39,7 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 *
 	 * @return array
 	 */
-	public function provides()
-	{
+	public function provides() {
 		return array('taxonomy');
 	}
 
