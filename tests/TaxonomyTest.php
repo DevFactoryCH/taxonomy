@@ -18,7 +18,6 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
   /**
    * Clean mockery after each test
    *
-   *
    * @return
    */
   public function tearDown() {
