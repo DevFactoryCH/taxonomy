@@ -31,6 +31,19 @@ trait TaxonomyTrait {
     return $this->related()->where('vocabulary_id', $vocabulary->id)->get();
   }
 
+  public function getTermsByVocabularyNameAsArray($name) {
+    $vocabulary = \Taxonomy::getVocabularyByName($name);
+
+    $term_relations = $this->related()->where('vocabulary_id', $vocabulary->id)->get();
+
+    $data = [];
+    foreach ($term_relations as $term_relation) {
+      $data[$term_relation->term->id] = $term_relation->term->name;
+    }
+
+    return $data;
+  }
+
   public function removeTerm($term_id) {
     $this->related()->where('term_id', $term_id)->delete();
   }
