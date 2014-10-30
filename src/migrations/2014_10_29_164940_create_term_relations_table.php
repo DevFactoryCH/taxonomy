@@ -17,6 +17,8 @@ class CreateTermRelationsTable extends Migration {
 			$table->string('relationable_type');
 			$table->integer('term_id')->unsigned();
 			$table->foreign('term_id')->references('id')->on('terms');
+			$table->integer('vocabulary_id')->unsigned();
+			$table->foreign('vocabulary_id')->references('id')->on('vocabularies');
 			$table->timestamps();
 		});
 	}

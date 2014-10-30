@@ -18,7 +18,7 @@ class Term extends \Eloquent {
   }
 
 	public function vocabulary() {
-		return $this->belongsTo('Devfactory\Taxonomy\Vocabulary');
+		return $this->belongsTo('Vocabulary');
 	}
 
 }

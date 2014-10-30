@@ -13,11 +13,11 @@ class Vocabulary extends \Eloquent {
   ];
 
   public function terms() {
-    return $this->HasMany('Devfactory\Taxonomy\Term');
+    return $this->HasMany('DevFactory\Taxonomy\Models\Term');
   }
 
   public function relations() {
-    return $this->HasMany('Devfactory\Taxonomy\TermRelation');
+    return $this->HasMany('TermRelation');
   }
 
 }

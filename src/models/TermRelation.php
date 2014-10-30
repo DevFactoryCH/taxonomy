@@ -4,6 +4,7 @@ class TermRelation extends \Eloquent {
 
   protected $fillable = [
     'term_id',
+    'vocabulary_id',
   ];
 
 	protected $table = 'term_relations';
@@ -13,7 +14,7 @@ class TermRelation extends \Eloquent {
   }
 
 	public function term() {
-		return $this->belongsTo('Devfactory\Taxonomy\Term');
+		return $this->belongsTo('DevFactory\Taxonomy\Models\Term');
 	}
 
 }

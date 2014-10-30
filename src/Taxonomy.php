@@ -10,6 +10,7 @@ class Taxonomy {
   protected $term_relation;
 
   public function __construct(Vocabulary $vocabulary, Term $term) {
+    // Inject required Models
     $this->vocabulary = $vocabulary;
     $this->term = $term;
   }
@@ -55,7 +56,7 @@ class Taxonomy {
    *  The Vocabulary Model object, otherwise NULL
    */
   public function getVocabularyByName($name) {
-    return $this->vocabulary->where('name', $name);
+    return $this->vocabulary->where('name', $name)->first();
   }
 
   /**
