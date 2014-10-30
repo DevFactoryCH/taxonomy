@@ -1,7 +1,9 @@
 <?php namespace Devfactory\Taxonomy;
 
 use Illuminate\Support\ServiceProvider;
-use Devfactory\Taxonomy\Models\Vocabulary;
+use DevFactory\Taxonomy\Models\Vocabulary;
+use DevFactory\Taxonomy\Models\Term;
+use DevFactory\Taxonomy\Taxonomy;
 
 class TaxonomyServiceProvider extends ServiceProvider {
 
@@ -30,7 +32,7 @@ class TaxonomyServiceProvider extends ServiceProvider {
 	 */
 	public function register() {
     $this->app['taxonomy'] = $this->app->share(function($app) {
-      return new Taxonomy();
+      return new Taxonomy(new Vocabulary(), new Term());
     });
 	}
 

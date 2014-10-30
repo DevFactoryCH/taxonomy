@@ -1,6 +1,7 @@
 <?php namespace DevFactory\Taxonomy;
 
 use DevFactory\Taxonomy\Models\Vocabulary;
+use DevFactory\Taxonomy\Models\Term;
 
 class Taxonomy {
 
@@ -94,7 +95,7 @@ class Taxonomy {
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
   public function createTerm($vid, $name, $parent = 0, $weight = 0) {
-    if ($vocabulary = $this->vocabulary->findOrFail($id)) {
+    if ($vocabulary = $this->vocabulary->findOrFail($vid)) {
       $term = [
         'name' => $name,
         'vocabulary_id' => $vid,
