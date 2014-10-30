@@ -1,6 +1,6 @@
 <?php namespace DevFactory\Taxonomy\Models;
 
-class Term extends Eloquent {
+class Term extends \Eloquent {
 
   protected $fillable = [
     'name',
