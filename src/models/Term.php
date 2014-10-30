@@ -4,6 +4,13 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Term extends Eloquent {
 
+  protected $fillable = [
+    'name',
+    'vocabulary_id',
+    'parent',
+    'weight',
+  ];
+
 	public static $rules = [
 		'name' => 'required'
   ];
