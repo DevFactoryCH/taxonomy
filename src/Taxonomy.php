@@ -60,6 +60,25 @@ class Taxonomy {
   }
 
   /**
+   * Get a Vocabulary by name
+   *
+   * @param string $name
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getVocabularyByNameAsArray($name) {
+    $vocabulary = $this->vocabulary->where('name', $name)->first();
+
+    if (!is_null($vocabulary)) {
+      return $vocabulary->terms->lists('name', 'id');
+    }
+
+    return [];
+  }
+
+  /**
    * Delete a Vocabulary by ID
    *
    * @param int $id
