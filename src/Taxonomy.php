@@ -127,4 +127,5 @@ class Taxonomy {
       return $this->term->create($term);
     }
   }
+
 }
