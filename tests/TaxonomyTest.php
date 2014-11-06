@@ -6,13 +6,18 @@ use DevFactory\Taxonomy\Taxonomy;
 use \Mockery as m;
 
 use DevFactory\Taxonomy\Models\Vocabulary;
+use DevFactory\Taxonomy\Models\Term;
 use Illuminate\Support\Facades\Facade;
 
 class TaxonomyTest extends \PHPUnit_Framework_TestCase {
 
-  protected $taxonomy;
   protected $app;
-  protected $vocabularyModel;
+
+  protected $taxonomy;
+
+  protected $modelVocabulary;
+  protected $modelTerm;
+
   protected $eloquent;
 
   /**
@@ -38,8 +43,11 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
 
     // Instentiate class to test
     $this->eloquent = m::mock('Eloquent');
-    $this->vocabularyModel = $this->mock('DevFactory\Taxonomy\Models\Vocabulary');
-    $this->taxonomy = new Taxonomy($this->vocabularyModel);
+
+    $this->modelVocabulary = $this->mock('DevFactory\Taxonomy\Models\Vocabulary');
+    $this->modelTerm = $this->mock('DevFactory\Taxonomy\Models\Term');
+
+    $this->taxonomy = new Taxonomy($this->modelVocabulary, $this->modelTerm);
   }
 
   /**
@@ -78,13 +86,13 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
       ->with()
       ->andReturn(FALSE);
 
-    $this->vocabularyModel
+    $this->modelVocabulary
       ->shouldReceive('where')
       ->with('name', $name)
       ->andReturn($mock_count);
 
     // Mock
-    $this->vocabularyModel
+    $this->modelVocabulary
       ->shouldReceive('create')
       ->with($data)
       ->andReturn(TRUE);
@@ -109,7 +117,7 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
       ->with()
       ->andReturn(TRUE);
 
-    $this->vocabularyModel
+    $this->modelVocabulary
       ->shouldReceive('where')
       ->with('name', $name)
       ->andReturn($mock_count);
@@ -127,7 +135,7 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
     // Prepare data
     $id = 1;
 
-    $this->vocabularyModel
+    $this->modelVocabulary
       ->shouldReceive('find')
       ->with($id)
       ->andReturn(TRUE);
@@ -146,10 +154,16 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
     // Prepare data
     $name = 'MOCK_NAME';
 
-    $this->vocabularyModel
+    // Mock
+    $mock_first = m::mock('mockFirst');
+    $mock_first->shouldReceive('first')
+      ->with()
+      ->andReturn(TRUE);
+
+    $this->modelVocabulary
       ->shouldReceive('where')
       ->with('name', $name)
-      ->andReturn(TRUE);
+      ->andReturn($mock_first);
 
     // Act
     $result = $this->taxonomy->getVocabularyByName($name);
@@ -171,7 +185,7 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
       ->with()
       ->andReturn(TRUE);
 
-    $this->vocabularyModel
+    $this->modelVocabulary
       ->shouldReceive('findOrFail')
       ->with($id)
       ->andReturn($mock_delete);
