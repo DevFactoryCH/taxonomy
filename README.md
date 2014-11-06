@@ -1,35 +1,33 @@
-taxonomy-laravel-bundle
+Taxonomy
 =======================
 
-"devfactory/taxonomy": "dev-master"
-composer update
+This package allows you to create multiple vocabularies with a heirarchy of terms inside, that can then be used to attack to various Models.
 
------------------------
+Installation
+=========
 
-Register :
-in config/app.php providers
+Using Composer, edit your `composer.json` file to require `devfactory/taxonomy`.
 
-'Devfactory\Taxonomy\TaxonomyServiceProvider'
+	"require-dev": {
+		"devfactory/taxonomy": "dev-master"
+	}
 
-publish config
---------------
-php artisan config:publish devfactory/taxonomy
+Then from the terminal run
 
+    composer update
 
-Migrate tables :
-----------------
+Then register the  service provider by opening `app/config/app.php`
 
-php artisan migrate --package=devfactory/taxonomy
+    'DevFactory\Taxonomy\TaxonomyServiceProvider'
 
+If you want you can publish the config files if you want to change them
 
-Extends the models (optionnal)
-------------------------------
+    php artisan config:publish devfactory/taxonomy
 
-use Devfactory\Taxonomy\Term as taxoTermModel;
-class Term extends taxoTermModel { }
+Perform the DB migrations to install the required tables
 
-use Devfactory\Taxonomy\TermRelation as taxoTermRelationModel;
-class TermRelation extends taxoTermRelationModel { }
+    php artisan migrate --package=devfactory/taxonomy
 
-use Devfactory\Taxonomy\TermRelation as taxoVocabularyModel;
-class Vocabulary extends V { }
+And finally in any of the Models where you want to use the Taxonomy functionality, add the following trait:
+
+    use \DevFactory\Taxonomy\TaxonomyTrait;
