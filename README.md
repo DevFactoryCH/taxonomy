@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/DevFactoryCH/taxonomy.svg)](https://travis-ci.org/DevFactoryCH/taxonomy)
+
 #Taxonomy
 
 This package allows you to create vocabularies with terms in
