@@ -96,6 +96,27 @@ class Taxonomy {
   }
 
   /**
+   * Delete a Vocabulary by ID
+   *
+   * @param int $id
+   *  The ID of the Vocabulary to delete
+   *
+   * @return bool
+   *  TRUE if Vocabulary is deletes, otherwise FALSE
+   *
+   * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
+   */
+  public function deleteVocabularyByName($name) {
+    $vocabulary = $this->vocabulary->where('name', $name)->first();
+
+    if (!is_null($vocabulary)) {
+      return $vocabulary->delete();
+    }
+
+    return FALSE;
+  }
+
+  /**
    * Create a new term in a specific vocabulary
    *
    * @param int $vid
