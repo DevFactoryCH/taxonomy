@@ -9,7 +9,7 @@ This package allows you to create vocabularies with terms in
 Using Composer, edit your `composer.json` file to require `devfactory/taxonomy`.
 
 	"require-dev": {
-		"devfactory/taxonomy": "dev-master"
+		"devfactory/taxonomy": "2.0.*"
 	}
 
 Then from the terminal run
