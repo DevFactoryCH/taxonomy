@@ -1,16 +1,24 @@
-<?php namespace Devfactory\Taxonomy;
-use Illuminate\Database\Eloquent\Model as Eloquent;
+<?php namespace DevFactory\Taxonomy\Models;
 
-class Term extends Eloquent {
+class Term extends \Eloquent {
 
-	protected $guarded = array();
+  protected $fillable = [
+    'name',
+    'vocabulary_id',
+    'parent',
+    'weight',
+  ];
 
-	public static $rules = array(
-		'value' => 'required');
+	public static $rules = [
+		'name' => 'required'
+  ];
 
+  public function termRelation() {
+    return $this->morphMany('TermRelation', 'relationable');
+  }
 
 	public function vocabulary() {
-
-		return $this->belongsTo('Devfactory\Taxonomy\Vocabulary');
+		return $this->belongsTo('Vocabulary');
 	}
+
 }
