@@ -78,7 +78,7 @@ $term_benz = Taxonomy::CreateTerm($vocabulary->id, 'Mercedes-Benz', $german_cars
 $term_ferrari = Taxonomy::CreateTerm($vocabulary->id, 'Ferrari', $italian_cars->id, 0);
 ```
 
-Then if I have a Car Model, I might create a new instance and assign it a term for the make it belongs to:
+With the Car Model, I can create a new instance and assign it a term for the make it belongs to:
 
 ```php
 $car = Car::create([
