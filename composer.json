@@ -17,6 +17,9 @@
     "mockery/mockery": "dev-master@dev"
   },
   "autoload": {
+    "classmap": [
+      "src/controllers"
+    ],
     "psr-4": {
       "DevFactory\\Taxonomy\\": "src"
     }
