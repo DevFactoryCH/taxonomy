@@ -1,3 +1,3 @@
-<?php namespace DevFactory\Taxonomy\Exceptions;
+<?php namespace Devfactory\Taxonomy\Exceptions;
 
 class VocabularyExistsException extends \UnexpectedValueException {}

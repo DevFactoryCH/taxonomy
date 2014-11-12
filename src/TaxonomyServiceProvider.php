@@ -1,9 +1,9 @@
 <?php namespace Devfactory\Taxonomy;
 
 use Illuminate\Support\ServiceProvider;
-use DevFactory\Taxonomy\Models\Vocabulary;
-use DevFactory\Taxonomy\Models\Term;
-use DevFactory\Taxonomy\Taxonomy;
+use Devfactory\Taxonomy\Models\Vocabulary;
+use Devfactory\Taxonomy\Models\Term;
+use Devfactory\Taxonomy\Taxonomy;
 
 class TaxonomyServiceProvider extends ServiceProvider {
 

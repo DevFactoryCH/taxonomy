@@ -1,7 +1,7 @@
-<?php namespace DevFactory\Taxonomy;
+<?php namespace Devfactory\Taxonomy;
 
-use DevFactory\Taxonomy\Models\TermRelation;
-use DevFactory\Taxonomy\Models\Term;
+use Devfactory\Taxonomy\Models\TermRelation;
+use Devfactory\Taxonomy\Models\Term;
 
 trait TaxonomyTrait {
 
@@ -11,7 +11,7 @@ trait TaxonomyTrait {
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
 	public function related() {
-		return $this->morphMany('DevFactory\Taxonomy\Models\TermRelation', 'relationable');
+		return $this->morphMany('Devfactory\Taxonomy\Models\TermRelation', 'relationable');
 	}
 
   /**

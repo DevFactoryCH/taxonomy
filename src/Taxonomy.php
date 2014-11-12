@@ -1,7 +1,7 @@
-<?php namespace DevFactory\Taxonomy;
+<?php namespace Devfactory\Taxonomy;
 
-use DevFactory\Taxonomy\Models\Vocabulary;
-use DevFactory\Taxonomy\Models\Term;
+use Devfactory\Taxonomy\Models\Vocabulary;
+use Devfactory\Taxonomy\Models\Term;
 
 class Taxonomy {
 

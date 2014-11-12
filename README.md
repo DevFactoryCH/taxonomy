@@ -21,7 +21,7 @@ Then from the terminal run
 
 Then register the  service provider by opening `app/config/app.php`
 
-    'DevFactory\Taxonomy\TaxonomyServiceProvider'
+    'Devfactory\Taxonomy\TaxonomyServiceProvider'
 
 If you want you can publish the config files if you want to change them
 
@@ -37,7 +37,7 @@ And finally in any of the Models where you want to use the Taxonomy functionalit
 <?php
 
 class Car extends \Eloquent {
-  use \DevFactory\Taxonomy\TaxonomyTrait;
+  use \Devfactory\Taxonomy\TaxonomyTrait;
 }
 ```
 

@@ -9,7 +9,9 @@ use Validator;
 use View;
 use Helpers;
 
-class TaxonomyController extends \AdminController {
+use Devfactory\Taxonomy\Models\Vocabulary;
+
+class TaxonomyController extends \BaseController {
 
 	protected $vocabulary;
 	protected $route_prefix;

@@ -1,4 +1,4 @@
-<?php namespace DevFactory\Taxonomy\Models;
+<?php namespace Devfactory\Taxonomy\Models;
 
 class Term extends \Eloquent {
 

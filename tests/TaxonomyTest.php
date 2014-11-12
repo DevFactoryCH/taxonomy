@@ -1,12 +1,12 @@
 <?php
 
-namespace DevFactory\Taxonomy\Test;
+namespace Devfactory\Taxonomy\Test;
 
-use DevFactory\Taxonomy\Taxonomy;
+use Devfactory\Taxonomy\Taxonomy;
 use \Mockery as m;
 
-use DevFactory\Taxonomy\Models\Vocabulary;
-use DevFactory\Taxonomy\Models\Term;
+use Devfactory\Taxonomy\Models\Vocabulary;
+use Devfactory\Taxonomy\Models\Term;
 use Illuminate\Support\Facades\Facade;
 
 class TaxonomyTest extends \PHPUnit_Framework_TestCase {
@@ -44,8 +44,8 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
     // Instentiate class to test
     $this->eloquent = m::mock('Eloquent');
 
-    $this->modelVocabulary = $this->mock('DevFactory\Taxonomy\Models\Vocabulary');
-    $this->modelTerm = $this->mock('DevFactory\Taxonomy\Models\Term');
+    $this->modelVocabulary = $this->mock('Devfactory\Taxonomy\Models\Vocabulary');
+    $this->modelTerm = $this->mock('Devfactory\Taxonomy\Models\Term');
 
     $this->taxonomy = new Taxonomy($this->modelVocabulary, $this->modelTerm);
   }
@@ -122,7 +122,7 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
       ->with('name', $name)
       ->andReturn($mock_count);
 
-    $this->setExpectedException('\DevFactory\Taxonomy\Exceptions\VocabularyExistsException');
+    $this->setExpectedException('\Devfactory\Taxonomy\Exceptions\VocabularyExistsException');
 
     // Act
     $result = $this->taxonomy->createVocabulary($name);

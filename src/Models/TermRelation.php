@@ -1,4 +1,4 @@
-<?php namespace DevFactory\Taxonomy\Models;
+<?php namespace Devfactory\Taxonomy\Models;
 
 class TermRelation extends \Eloquent {
 
@@ -14,7 +14,7 @@ class TermRelation extends \Eloquent {
   }
 
 	public function term() {
-		return $this->belongsTo('DevFactory\Taxonomy\Models\Term');
+		return $this->belongsTo('Devfactory\Taxonomy\Models\Term');
 	}
 
 }
