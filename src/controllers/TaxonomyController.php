@@ -9,7 +9,7 @@ use Validator;
 use View;
 use Helpers;
 
-class TaxonomyController extends \Illuminate\Routing\Controllers\Controller {
+class TaxonomyController extends \AdminController {
 
 	protected $vocabulary;
 	protected $route_prefix;
