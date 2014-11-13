@@ -19,6 +19,8 @@ class TaxonomyController extends \BaseController {
 	public function __construct(Vocabulary $vocabulary) {
 		$this->vocabulary = $vocabulary;
 		$this->route_prefix = Config::get('taxonomy::route_prefix');
+
+    View::composer('taxonomy::index', 'Devfactory\Taxonomy\Composers\TaxonomyComposer');
 	}
 
 	/**
