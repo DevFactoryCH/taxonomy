@@ -19,9 +19,11 @@ Then from the terminal run
 
     composer update
 
-Then register the  service provider by opening `app/config/app.php`
+Then register the service provider and Facade by opening `app/config/app.php`
 
     'Devfactory\Taxonomy\TaxonomyServiceProvider'
+
+    'Taxonomy'        => 'Devfactory\Taxonomy\Facades\TaxonomyFacade',
 
 If you want you can publish the config files if you want to change them
 
