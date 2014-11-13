@@ -1,50 +1,48 @@
-@extends(Config::get('taxonomy::layout_extend'))
+@extends($layout->extends)
 
-{{-- Page content --}}
-@section(Config::get('taxonomy::section'))
-<div class="page-header">
-	<h3>
-		Créeer un nouveau vocabulaire adawd
+@section($layout->header)
+  <h1>Create a vocabulary</h1>
+@stop
 
-		<div class="pull-right">
-			<a href="{{ URL::to('vocabularies') }}" class="btn btn-small btn-inverse"><i class="icon-circle-arrow-left icon-white"></i> Back</a>
-		</div>
-	</h3>
-</div>
+@section($layout->content)
 
+  <div class="row">
 
+    {{ Form::open(array('method' => 'POST', 'route' => array($prefix .'taxonomy.store'), 'id' => 'app-create', 'class' => 'form')) }}
 
-<form class="form-vertical" method="post" action="" autocomplete="off">
-	<!-- CSRF Token -->
-	<input type="hidden" name="_token" value="{{ csrf_token() }}" />
+    <div class="col-md-8">
 
-		<!-- Name -->
-		<div class="control-group {{ $errors->has('value') ? 'error' : '' }}">
-			{{ Form::label('value','Nom') }}
-			<div class="controls">
-				{{ Form::text('value') }}
-				{{ $errors->first('value', '<span class="help-inline">:message</span>') }}
-			</div>
-		</div>
+      <div class="box box-primary">
 
-			<!-- terms -->
-		<div class="control-group{{ $errors->first('terms', ' error') }}">
-			{{ Form::label('terms', 'termes (separate with ; )') }}
-			<div class="controls">
-				{{ Form::textarea('terms',null,array('style' => 'width:300px')) }}
-			{{ $errors->first('terms', '<span class="help-block">:message</span>') }}
-			</div>
-		</div>
+        <div class="box-body">
 
+          <div class="form-group{{ $errors->has('name') ? ' has-error has-feedback' : '' }}">
+            {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
+            {{ Form::text('name', NULL, ['class' => 'form-control']) }}
+            {{ $errors->has('name') ? Form::label('error', $errors->first('name'), array('class' => 'control-label')) : '' }}
+            {{ $errors->has('name') ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '' }}
+          </div>
 
-	<!-- Form actions -->
-	<div class="control-group">
-		<div class="controls">
-			<a class="btn btn-link" href="{{ URL::to(Config::get('taxonomy::section').'/vocabularies') }}">Cancel</a>
-			<button type="reset" class="btn">Reset</button>
-			<button type="submit" class="btn btn-success">Publish</button>
-		</div>
-	</div>
-</form>
+          <!-- terms -->
+          <div class="form-group{{ $errors->first(' terms', ' error') }}">
+            {{ Form::label('terms', 'Terms (Separate with ; or ,)', ['class' => 'control-label']) }}
+            {{ Form::textarea('terms', NULL, ['class' => 'form-control']) }}
+            {{ $errors->has('terms') ? Form::label('error', $errors->first('terms'), array('class' => 'control-label')) : '' }}
+            {{ $errors->has('terms') ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '' }}
+          </div>
+
+        </div>
+
+        <div class="box-footer">
+          <button type="reset" class="btn btn-flat">Reset</button>
+          <button type="submit" class="btn btn-flat btn-success">Create</button>
+        </div>
+
+      </div>
+    </div>
+
+    {{ Form::close() }}
+
+  </div>
 
 @stop

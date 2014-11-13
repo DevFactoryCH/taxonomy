@@ -2,6 +2,9 @@
 
 return array(
 	'route_prefix' => 'admin',
-	'layout_extend' => 'layouts.admin',
-	'section' => 'content',
+  'layout' => [
+    'extends' => 'layouts.admin',
+    'header' => 'header',
+    'content' => 'content',
+  ],
 );

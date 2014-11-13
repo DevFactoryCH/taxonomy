@@ -1,6 +1,10 @@
-@extends(Config::get('taxonomy::config.layout_extend'))
+@extends($layout->extends)
 
-@section(Config::get('taxonomy::section'))
+@section($layout->header)
+  <h1>Taxonomy</h1>
+@stop
+
+@section($layout->content)
 
   <p>
     {{ Form::open(array('method'=>'GET','route' => array('admin.taxonomy.create'))) }}
@@ -10,13 +14,13 @@
 
   <div class="row">
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 col-md-6">
 
       <div class="box">
 
         <div class="box-header">
 
-          <h3 class="box-title">Taxonomy</h3>
+          <h3 class="box-title">Vocabularies</h3>
 
         </div>
 
@@ -24,20 +28,25 @@
 
           <table class="table table-hover">
 
-            <thead>
+            <tbody>
               <tr>
                 <th class="span2">Name</th>
                 <th class="span2"></th>
               </tr>
-            </thead>
+            </tbody>
 
             <tbody>
               @foreach ($vocabularies as $vocabulary)
                 <tr>
                   <td>{{ $vocabulary->name }}</td>
                   <td>
-                    <a href="{{ URL::to(Config::get('taxonomy::route_prefix').'/vocabularies/edit', $v->id) }}" class="btn btn-mini">@lang('button.edit')</a>
-                    <a href="{{ URL::to(Config::get('taxonomy::route_prefix').'/vocabularies/delete', $v->id) }}" class="btn btn-mini btn-danger del">@lang('button.delete')</a>
+		    {{ Form::open(array('class' => 'pull-right', 'method' => 'DELETE', 'route' => array($prefix . 'taxonomy.destroy', $vocabulary->id))) }}
+		    {{ Form::button(Lang::get('button.delete'), array('class'=>'delete-confirm-dialog btn btn-xs btn-danger btn-flat', 'type' => 'submit')) }}
+		    {{ Form::close() }}
+
+                    {{ Form::open(array('style' => 'margin-right: 5px', 'class' => 'pull-right', 'method' => 'GET', 'route' => array($prefix . 'taxonomy.edit', $vocabulary->id))) }}
+		    {{ Form::button(Lang::get('button.edit'), array('class'=>'btn btn-xs btn-info btn-flat', 'type' => 'submit')) }}
+		    {{ Form::close() }}
                   </td>
                 </tr>
               @endforeach
