@@ -137,16 +137,16 @@ class Taxonomy {
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
   public function createTerm($vid, $name, $parent = 0, $weight = 0) {
-    if ($vocabulary = $this->vocabulary->findOrFail($vid)) {
-      $term = [
-        'name' => $name,
-        'vocabulary_id' => $vid,
-        'parent' => $parent,
-        'weight' => $weight,
-      ];
+    $vocabulary = $this->vocabulary->findOrFail($vid);
 
-      return $this->term->create($term);
-    }
+    $term = [
+      'name' => $name,
+      'vocabulary_id' => $vid,
+      'parent' => $parent,
+      'weight' => $weight,
+    ];
+
+    return $this->term->create($term);
   }
 
 }

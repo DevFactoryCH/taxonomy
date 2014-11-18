@@ -172,6 +172,55 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue($result);
   }
 
+  public function testGetVocabularyByNameAsArrayNotFound() {
+    // Prepare data
+    $name = 'MOCK_NAME';
+    $result = null;
+
+    // Mock
+    $mockFirst = m::mock('first');
+    $mockFirst->shouldReceive('first')
+      ->andReturn($result);
+
+    $this->modelVocabulary
+      ->shouldReceive('where')
+      ->with('name', $name)
+      ->andReturn($mockFirst);
+
+    // Act
+    $result = $this->taxonomy->getVocabularyByNameAsArray($name);
+
+    // Assert
+    $this->assertEmpty($result);
+  }
+
+  public function testGetVocabularyByNameAsArrayFound() {
+    // Prepare data
+    $name = 'MOCK_NAME';
+    $vocabulary = new \StdClass();
+
+    // Mock
+    $mockList = m::mock('lists');
+    $mockList->shouldReceive('lists')
+      ->with('name', 'id')
+      ->andReturn(true);
+
+    $vocabulary->terms = $mockList;
+    $mockFirst = m::mock('first');
+    $mockFirst->shouldReceive('first')
+      ->andReturn($vocabulary);
+
+    $this->modelVocabulary->shouldReceive('where')
+      ->with('name', $name)
+      ->andReturn($mockFirst);
+
+    // Act
+    $result = $this->taxonomy->getVocabularyByNameAsArray($name);
+
+    // Assert
+    $this->assertTrue($result);
+  }
+
   /**
    * Test the creation of a vocabulary term
    */
@@ -226,6 +275,32 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
     // Assert
     $this->assertTrue($result);
   }
+
+  /**
+   * Test the creation of a vocabulary term
+   */
+  public function testTaxonomyDeleteVocabularyByNameFalse() {
+    // Prepare data
+    $name = 'MOCK_NAME';
+
+    // Mock
+    $mock_first = m::mock('mockFirst');
+    $mock_first->shouldReceive('first')
+      ->with()
+      ->andReturn(NULL);
+
+    $this->modelVocabulary
+      ->shouldReceive('where')
+      ->with('name', $name)
+      ->andReturn($mock_first);
+
+    // Act
+    $result = $this->taxonomy->deleteVocabularyByName($name);
+
+    // Assert
+    $this->assertFalse($result);
+  }
+
 
   public function testTaxonomyCreateTerm() {
     // Prepare data
