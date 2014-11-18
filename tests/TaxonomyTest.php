@@ -197,4 +197,65 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue($result);
   }
 
+  /**
+   * Test the creation of a vocabulary term
+   */
+  public function testTaxonomyDeleteVocabularyByName() {
+    // Prepare data
+    $name = 'MOCK_NAME';
+
+    // Mock
+    $mock_delete = m::mock('mockDelete');
+    $mock_delete->shouldReceive('delete')
+      ->with()
+      ->andReturn(TRUE);
+
+    $mock_first = m::mock('mockFirst');
+    $mock_first->shouldReceive('first')
+      ->with()
+      ->andReturn($mock_delete);
+
+    $this->modelVocabulary
+      ->shouldReceive('where')
+      ->with('name', $name)
+      ->andReturn($mock_first);
+
+    // Act
+    $result = $this->taxonomy->deleteVocabularyByName($name);
+
+    // Assert
+    $this->assertTrue($result);
+  }
+
+  public function testTaxonomyCreateTerm() {
+    // Prepare data
+    $vid = 1;
+    $name = 'MOCK_NAME';
+    $parent = 0;
+    $weight = 0;
+
+    $term = [
+      'name' => $name,
+      'vocabulary_id' => $vid,
+      'parent' => $parent,
+      'weight' => $weight,
+    ];
+
+    // Mock
+    $mock_create = $this->modelTerm->shouldReceive('create')
+      ->with($term)
+      ->andReturn(TRUE);
+
+    $this->modelVocabulary
+      ->shouldReceive('findOrFail')
+      ->with($vid)
+      ->andReturn($mock_create);
+
+    // Act
+    $result = $this->taxonomy->createTerm($vid, $name, $parent, $weight);
+
+    // Assert
+    $this->assertTrue($result);
+  }
+
 }
