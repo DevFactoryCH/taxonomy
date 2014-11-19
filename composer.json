@@ -14,7 +14,8 @@
     "illuminate/support": "4.2.*"
   },
   "require-dev": {
-    "mockery/mockery": "dev-master@dev"
+    "mockery/mockery": "dev-master@dev",
+    "codeclimate/php-test-reporter": "dev-master"
   },
   "autoload": {
     "psr-4": {
