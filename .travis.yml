@@ -5,15 +5,15 @@ php:
   - 5.5
   - 5.6
 
-before_script:
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev
-
 addons:
     code_climate:
         repo_token: 961fe75a0544da3bc195fa128e7e2aefe0d058b127bc87ab5da8e5630922a7ab
 
+script: phpunit  --coverage-clover build/logs/clover.xml
+
+before_script:
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install --dev
+
 after_script:
   - vendor/bin/test-reporter
-
-script: phpunit
