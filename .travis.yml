@@ -12,4 +12,4 @@ before_script:
   - php composer.phar install --dev
 
 after_script:
-  - CODECLIMATE_REPO_TOKEN="961fe75a0544da3bc195fa128e7e2aefe0d058b127bc87ab5da8e5630922a7ab" vendor/bin/test-reporter
+  - CODECLIMATE_REPO_TOKEN=8b7ee9f9da07b2a4967bcdd0bc1e997ba3ba6335a4541456d0f92db6c215f593 vendor/bin/test-reporter
