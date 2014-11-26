@@ -18,6 +18,9 @@
     "codeclimate/php-test-reporter": "dev-master"
   },
   "autoload": {
+    "classmap": [
+      "src/migrations"
+    ],
     "psr-4": {
       "Devfactory\\Taxonomy\\": "src/"
     }
