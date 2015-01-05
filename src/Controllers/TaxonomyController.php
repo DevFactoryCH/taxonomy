@@ -19,6 +19,8 @@ class TaxonomyController extends \BaseController {
   protected $route_prefix;
 
   public function __construct(Vocabulary $vocabulary) {
+    parent::__construct();
+
     $this->vocabulary = $vocabulary;
     $this->route_prefix = rtrim(Config::get('taxonomy::route_prefix'), '.') . '.';
 
