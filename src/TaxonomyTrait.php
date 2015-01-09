@@ -96,4 +96,17 @@ trait TaxonomyTrait {
     return $this->related()->delete();
   }
 
+  /**
+   * Filter the model to return a subset of entries matching the term ID
+   *
+   * @param object $query
+   * @param int $term_id
+   *
+   * @return void
+   */
+  public function scopeGetAllByTermId($query, $term_id) {
+    return $query->whereHas('related', function($q) use($term_id) {
+      $q->where('term_id', '=', $term_id);
+    });
+  }
 }
