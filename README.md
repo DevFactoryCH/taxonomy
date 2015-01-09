@@ -107,5 +107,5 @@ $terms = $car->getTermsByVocabularyName('Cars');
 To retrieve all the cars that match a given term:
 
 ```php
-$audis = Car::scopeGetAllByTermId($term_audi->id)->get();
+$audis = Car::getAllByTermId($term_audi->id)->get();
 ```
