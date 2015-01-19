@@ -62,18 +62,6 @@ class TermsController extends \BaseController {
   }
 
   /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function show($id) {
-    $vocabulary = $this->vocabulary->find($id);
-
-    return View::make('taxonomy::show', compact('vocabulary'));
-  }
-
-  /**
    * Show the form for editing the specified resource.
    *
    * @param  int  $id

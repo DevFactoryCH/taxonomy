@@ -36,60 +36,7 @@ class TaxonomyController extends \BaseController {
   public function index() {
     $vocabularies = $this->vocabulary->paginate(10);
 
-    return View::make('taxonomy::index', compact('vocabularies'));
-  }
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create() {
-    return View::make('taxonomy::create');
-  }
-
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store() {
-    $validation = Validator::make(Input::All(), Vocabulary::$rules);
-
-    if ($validation->fails()) {
-      return Redirect::route($this->route_prefix . 'taxonomy.create')
-        ->withInput()
-        ->withErrors($validation)
-        ->with('message', 'There were validation errors.');
-    }
-
-    $vocabulary = Vocabulary::create([
-      'name' => Input::get('name'),
-    ]);
-
-    $terms = preg_split('/[;,]/', trim(Input::get('terms')));
-    foreach ($terms as $term) {
-      if ($term != "") {
-        $term = Term::create([
-          'name' => $term,
-          'vocabulary_id' => $vocabulary->id,
-        ]);
-      }
-    }
-
-    return Redirect::route($this->route_prefix . 'taxonomy.index');
-  }
-
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function show($id) {
-    $vocabulary = $this->vocabulary->find($id);
-
-    return View::make('taxonomy::show', compact('vocabulary'));
+    return View::make('taxonomy::vocabulary.index', compact('vocabularies'));
   }
 
   /**
@@ -109,54 +56,7 @@ class TaxonomyController extends \BaseController {
 
     $terms = $vocabulary->terms;
 
-    return View::make('taxonomy::edit', compact('vocabulary', 'terms'));
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id) {
-    $validation = Validator::make(Input::All(), Vocabulary::$rules);
-
-    if ($validation->fails()) {
-      return Redirect::route($this->route_prefix . 'taxonomy.edit', $id)
-        ->withInput()
-        ->withErrors($validation)
-        ->with('message', 'There were validation errors.');
-    }
-
-    $vocabulary = $this->vocabulary->find($id);
-    $vocabulary->name = Input::get('name');
-    $vocabulary->save();
-
-    Term::where('vocabulary_id', $id)->delete();
-
-    $terms = preg_split('/[;,]/', trim(Input::get('terms')));
-    foreach ($terms as $term) {
-      if (trim($term) != "") {
-        $term = Term::create([
-          'name' => $term,
-          'vocabulary_id' => $vocabulary->id,
-        ]);
-      }
-    }
-
-    return Redirect::route($this->route_prefix . 'taxonomy.index');
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id) {
-    Vocabulary::destroy($id);
-
-    return Response::make('OK', 200);
+    return View::make('taxonomy::vocabulary.edit', compact('vocabulary', 'terms'));
   }
 
 }
