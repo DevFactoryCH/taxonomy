@@ -1,16 +1,10 @@
 @extends($layout->extends)
 
 @section($layout->header)
-  <h1>Taxonomy</h1>
+  <h1>@lang('taxonomy::taxonomy.index.header')</h1>
 @stop
 
 @section($layout->content)
-
-  <p>
-    {{ Form::open(array('method'=>'GET','route' => array('admin.taxonomy.create'))) }}
-    {{ Form::submit('Add a vocabulary', array('class'=>'btn btn-primary app-add')) }}
-    {{ Form::close() }}
-  </p>
 
   <div class="row">
 
@@ -20,7 +14,9 @@
 
         <div class="box-header">
 
-          <h3 class="box-title">Vocabularies</h3>
+          <h3 class="box-title">
+            @lang('taxonomy::taxonomy.vocabularies')
+          </h3>
 
         </div>
 
@@ -30,8 +26,12 @@
 
             <tbody>
               <tr>
-                <th class="span2">Name</th>
-                <th class="span2"></th>
+                <th class="span2">
+                  @lang('taxonomy::taxonomy.table.name')
+                </th>
+                <th class="span2">
+                  @lang('taxonomy::taxonomy.table.actions')
+                </th>
               </tr>
             </tbody>
 
@@ -39,14 +39,14 @@
               @foreach ($vocabularies as $vocabulary)
                 <tr>
                   <td>{{ $vocabulary->name }}</td>
-                  <td>
-		    {{ Form::open(array('class' => 'pull-right', 'method' => 'DELETE', 'route' => array($prefix . 'taxonomy.destroy', $vocabulary->id))) }}
-		    {{ Form::button(Lang::get('button.delete'), array('class'=>'delete-confirm-dialog btn btn-xs btn-danger btn-flat', 'type' => 'submit')) }}
-		    {{ Form::close() }}
+                  <td class="text-right">
 
-                    {{ Form::open(array('style' => 'margin-right: 5px', 'class' => 'pull-right', 'method' => 'GET', 'route' => array($prefix . 'taxonomy.edit', $vocabulary->id))) }}
-		    {{ Form::button(Lang::get('button.edit'), array('class'=>'btn btn-xs btn-info btn-flat', 'type' => 'submit')) }}
-		    {{ Form::close() }}
+                    <div class="btn-group">
+                      {{ Form::open(array('method' => 'GET', 'route' => array($prefix . 'taxonomy.edit', $vocabulary->id))) }}
+		      {{ Form::button(Lang::get('taxonomy::taxonomy.index.button.view_terms'), array('class'=>'btn btn-xs btn-primary btn-flat', 'type' => 'submit')) }}
+		      {{ Form::close() }}
+                    </div>
+
                   </td>
                 </tr>
               @endforeach

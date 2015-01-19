@@ -2,8 +2,10 @@
 
 $prefix = Config::get('taxonomy::route_prefix');
 
-Route::group(array('prefix' => 'admin'), function() {
+Route::group(array('prefix' => $prefix), function() {
 
   Route::resource('taxonomy', 'Devfactory\Taxonomy\Controllers\TaxonomyController');
+
+  Route::resource('terms', 'Devfactory\Taxonomy\Controllers\TermsController');
 
 });

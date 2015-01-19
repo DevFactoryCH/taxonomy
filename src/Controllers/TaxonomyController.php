@@ -6,6 +6,7 @@ use Lang;
 use Redirect;
 use Response;
 use Sentry;
+use Session;
 use Validator;
 use View;
 use Helpers;
@@ -100,11 +101,13 @@ class TaxonomyController extends \BaseController {
   public function edit($id) {
     $vocabulary = $this->vocabulary->find($id);
 
+    Session::put('vocabulary_id', $vocabulary->id);
+
     if (is_null($vocabulary)) {
       return Redirect::route($this->route_prefix . 'taxonomy.index');
     }
 
-    $terms = implode(';', $vocabulary->terms->lists('name'));
+    $terms = $vocabulary->terms;
 
     return View::make('taxonomy::edit', compact('vocabulary', 'terms'));
   }

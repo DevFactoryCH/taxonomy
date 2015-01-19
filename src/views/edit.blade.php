@@ -1,47 +1,67 @@
 @extends($layout->extends)
 
 @section($layout->header)
-  <h1>Edit</h1>
+  <h1>@lang('taxonomy::taxonomy.edit.header'){{ $vocabulary->name }}</h1>
 @stop
 
 @section($layout->content)
 
+  <p>
+    {{ Form::open(array('method' => 'GET', 'route' => array($prefix . 'terms.create'))) }}
+    {{ Form::button(Lang::get('taxonomy::taxonomy.edit.button_add_term'), array('class'=>'btn btn-primary btn-flat', 'type' => 'submit')) }}
+    {{ Form::close() }}
+  </p>
+
   <div class="row">
 
-    {{ Form::open(array('method' => 'PUT', 'route' => array($prefix .'taxonomy.update', $vocabulary->id), 'id' => 'app-update', 'class' => 'form')) }}
-
-    <div class="col-md-8">
+    <div class="col-md-6">
 
       <div class="box box-primary">
 
-        <div class="box-body">
+        <div class="box-body table-responsive no-padding">
 
-          <div class="form-group{{ $errors->has('name') ? ' has-error has-feedback' : '' }}">
-            {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
-            {{ Form::text('name', $vocabulary->name, ['class' => 'form-control']) }}
-            {{ $errors->has('name') ? Form::label('error', $errors->first('name'), array('class' => 'control-label')) : '' }}
-            {{ $errors->has('name') ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '' }}
-          </div>
+          <table class="table table-hover">
 
-          <!-- terms -->
-          <div class="form-group{{ $errors->first(' terms', ' error') }}">
-            {{ Form::label('terms', 'Terms (Separate with ; or ,)', ['class' => 'control-label']) }}
-            {{ Form::textarea('terms', $terms, ['class' => 'form-control']) }}
-            {{ $errors->has('terms') ? Form::label('error', $errors->first('terms'), array('class' => 'control-label')) : '' }}
-            {{ $errors->has('terms') ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '' }}
-          </div>
+            <tbody>
+              <tr>
+                <th class="span2">
+                  @lang('taxonomy::taxonomy.table.terms')
+                </th>
+                <th class="span2">
+                  @lang('taxonomy::taxonomy.table.actions')
+                </th>
+              </tr>
+            </tbody>
 
-        </div>
+            <tbody>
+              @foreach ($terms as $term)
+                <tr>
+                  <td>{{ $term->name }}</td>
+                  <td class="text-right">
 
-        <div class="box-footer">
-          <button type="reset" class="btn btn-flat">Reset</button>
-          <button type="submit" class="btn btn-flat btn-success">Save</button>
+                    <div class="btn-group">
+                      {{ Form::open(array('method' => 'GET', 'route' => array($prefix . 'terms.edit', $term->id))) }}
+                      {{ Form::button(Lang::get('taxonomy::taxonomy.button.edit'), array('class'=>'btn btn-xs btn-primary btn-flat', 'type' => 'submit')) }}
+                      {{ Form::close() }}
+                    </div>
+
+                    <div class="btn-group">
+                      {{ Form::open(array('method' => 'DELETE', 'route' => array($prefix . 'terms.destroy', $term->id))) }}
+                      {{ Form::button(Lang::get('taxonomy::taxonomy.button.delete'), array('class'=>'delete-confirm-dialog btn btn-xs btn-danger btn-flat', 'type' => 'submit')) }}
+                      {{ Form::close() }}
+                    </div>
+
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+
+          </table>
+
         </div>
 
       </div>
     </div>
-
-    {{ Form::close() }}
 
   </div>
 
