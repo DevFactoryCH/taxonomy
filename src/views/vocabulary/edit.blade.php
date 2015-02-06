@@ -113,7 +113,7 @@
                           &nbsp;
                           <!-- checkbox -->
                           <!-- todo text -->
-                          <span class="text">{{ $child->name }} - child</span>
+                          <span class="text">{{ $child->name }}</span>
                           <!-- Emphasis label -->
                           <!-- General tools such as edit or delete-->
                           <div class="pull-right">
