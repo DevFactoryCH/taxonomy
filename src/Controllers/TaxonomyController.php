@@ -54,9 +54,54 @@ class TaxonomyController extends \BaseController {
       return Redirect::route($this->route_prefix . 'taxonomy.index');
     }
 
-    $terms = $vocabulary->terms;
+    $terms = $vocabulary->terms()->orderBy('parent', 'ASC')->orderBy('weight', 'ASC')->get();
+
+    $ordered_terms = [];
+    foreach ($terms as $term) {
+      if (!$term->parent) {
+        $ordered_terms[$term->id] = [
+          'term' => $term,
+          'children' => [],
+        ];
+      }
+      else {
+        $ordered_terms[$term->parent]['children'][] = $term;
+      }
+    }
+
+    $terms = $ordered_terms;
 
     return View::make('taxonomy::vocabulary.edit', compact('vocabulary', 'terms'));
+  }
+
+  public function orderTerms($id) {
+    $this->vocabulary->find($id);
+
+    $request = \Request::instance();
+    $json = $request->getContent();
+    $content = json_decode($json);
+
+    foreach ($content as $parent_key => $parent){
+      $parent_term = Term::find($parent->id);
+
+      $parent_term->parent = 0;
+      $parent_term->weight = $parent_key;
+      $parent_term->save();
+
+      if (empty($parent->children)) {
+        continue;
+      }
+
+      foreach ($parent->children as $child_key => $child){
+        $child_term = Term::find($child->id);
+
+        $child_term->parent = $parent_term->id;
+        $child_term->weight = $child_key;
+
+        $child_term->save();
+      }
+    }
+
   }
 
 }
