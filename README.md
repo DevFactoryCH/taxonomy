@@ -5,25 +5,67 @@
 
 #Taxonomy
 
-This package allows you to create vocabularies with terms in
+This package allows you to create vocabularies with terms in Laravel 4 and 5
 
 ## Installation
 
-Using Composer, edit your `composer.json` file to require `devfactory/taxonomy`.
+### Laravel 5
+
+In your `composer.json` add:
 
 	"require": {
-		"devfactory/taxonomy": "2.0.*"
+		"devfactory/taxonomy": "3.0.*"
 	}
 
-Then from the terminal run
+From the terminal run
 
     composer update
 
 Then register the service provider and Facade by opening `app/config/app.php`
 
-    'Devfactory\Taxonomy\TaxonomyServiceProvider'
+```php
+'Devfactory\Taxonomy\TaxonomyServiceProvider',
 
-    'Taxonomy'        => 'Devfactory\Taxonomy\Facades\TaxonomyFacade',
+'Taxonomy'        => 'Devfactory\Taxonomy\Facades\TaxonomyFacade',
+```
+
+Then run the following artisant command to publish the config and migrations:
+
+	php artisan vendor:publish
+
+Then run the migrations:
+
+	php artisan migrate
+
+And finally in any of the Models where you want to use the Taxonomy functionality, add the following trait:
+
+```php
+<?php
+
+class Car extends \Eloquent {
+  use \Devfactory\Taxonomy\TaxonomyTrait;
+}
+```
+
+### Laravel 4
+
+In your `composer.json` add:
+
+	"require": {
+		"devfactory/taxonomy": "2.0.*"
+	}
+
+From the terminal run
+
+    composer update
+
+Then register the service provider and Facade by opening `app/config/app.php`
+
+```php
+'Devfactory\Taxonomy\TaxonomyServiceProvider',
+
+'Taxonomy'        => 'Devfactory\Taxonomy\Facades\TaxonomyFacade',
+```
 
 If you want you can publish the config files if you want to change them
 
