@@ -25,9 +25,4 @@
       "Devfactory\\Taxonomy\\": "src/"
     }
   },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "2.0.x-dev"
-    }
-  }
 }
