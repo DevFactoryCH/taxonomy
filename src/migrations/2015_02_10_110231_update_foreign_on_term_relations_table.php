@@ -14,9 +14,9 @@ class UpdateForeignOnTermRelationsTable extends Migration {
 	{
 		Schema::table('term_relations', function(Blueprint $table)
 		{
-			$table->dropForeign('term_id');
+			$table->dropForeign('term_relations_term_id_foreign');
 			$table->foreign('term_id')->references('id')->on('terms')->onDelete('cascade');
-			$table->dropForeign('vocabulary_id');
+			$table->dropForeign('term_relations_vocabulary_id_foreign');
 			$table->foreign('vocabulary_id')->references('id')->on('vocabularies')->onDelete('cascade');
 		});
 	}
@@ -31,9 +31,9 @@ class UpdateForeignOnTermRelationsTable extends Migration {
 	{
 		Schema::table('term_relations', function(Blueprint $table)
 		{
-      $table->dropForeign('term_id');
+      $table->dropForeign('term_relations_term_id_foreign');
 			$table->foreign('term_id')->references('id')->on('terms');
-			$table->dropForeign('vocabulary_id');
+			$table->dropForeign('term_relations_vocabulary_id_foreign');
 			$table->foreign('vocabulary_id')->references('id')->on('vocabularies');
 		});
 	}
