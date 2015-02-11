@@ -78,7 +78,7 @@
           <div class="dd">
             <ul class="dd-list">
               @foreach ($terms as $term_id => $parent)
-                <li class="dd-item" data-id="{{ $term_id }}">
+                <li class="dd-item" data-id="{{ $parent['term']->id }}">
                   <!-- drag handle -->
                   <div class="handle dd-handle">
                     <i class="fa fa-ellipsis-v"></i>
@@ -105,34 +105,70 @@
                   </div>
 
                   <ul class="dd-list">
-                    @foreach ($parent['children'] as $term_weight => $child)
-                      <li class="dd-item" data-id="{{ $child->id }}">
-                        <!-- drag handle -->
-                        <div class="handle dd-handle">
-                          <i class="fa fa-ellipsis-v"></i>
-                          <i class="fa fa-ellipsis-v"></i>
-                          &nbsp;
-                          <!-- checkbox -->
-                          <!-- todo text -->
-                          <span class="text">{{ $child->name }}</span>
-                          <!-- Emphasis label -->
-                          <!-- General tools such as edit or delete-->
-                          <div class="pull-right">
-                            <div class="btn-group">
-                              {{ Form::open(array('method' => 'GET', 'route' => array($prefix . 'terms.edit', $child->id))) }}
-                              {{ Form::button(Lang::get('taxonomy::vocabulary.button.edit'), array('class'=>'btn btn-xs btn-primary btn-flat', 'type' => 'submit')) }}
-                              {{ Form::close() }}
-                            </div>
+                    @if (!empty($parent['children']))
+                      @foreach ($parent['children'] as $term_weight => $child)
+                        <li class="dd-item" data-id="{{ $child['term']->id }}">
+                          <!-- drag handle -->
+                          <div class="handle dd-handle">
+                            <i class="fa fa-ellipsis-v"></i>
+                            <i class="fa fa-ellipsis-v"></i>
+                            &nbsp;
+                            <!-- checkbox -->
+                            <!-- todo text -->
+                            <span class="text">{{ $child['term']->name }}</span>
+                            <!-- Emphasis label -->
+                            <!-- General tools such as edit or delete-->
+                            <div class="pull-right">
+                              <div class="btn-group">
+                                {{ Form::open(array('method' => 'GET', 'route' => array($prefix . 'terms.edit', $child['term']->id))) }}
+                                {{ Form::button(Lang::get('taxonomy::vocabulary.button.edit'), array('class'=>'btn btn-xs btn-primary btn-flat', 'type' => 'submit')) }}
+                                {{ Form::close() }}
+                              </div>
 
-                            <div class="btn-group">
-                              {{ Form::open(array('method' => 'DELETE', 'route' => array($prefix . 'terms.destroy', $child->id))) }}
-                              {{ Form::button(Lang::get('taxonomy::vocabulary.button.delete'), array('class'=>'delete-confirm-dialog btn btn-xs btn-danger btn-flat', 'type' => 'submit')) }}
-                              {{ Form::close() }}
+                              <div class="btn-group">
+                                {{ Form::open(array('method' => 'DELETE', 'route' => array($prefix . 'terms.destroy', $child['term']->id))) }}
+                                {{ Form::button(Lang::get('taxonomy::vocabulary.button.delete'), array('class'=>'delete-confirm-dialog btn btn-xs btn-danger btn-flat', 'type' => 'submit')) }}
+                                {{ Form::close() }}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </li>
-                    @endforeach
+
+                          <ul class="dd-list">
+                            @if (!empty($child['children']))
+                              @foreach ($child['children'] as $term_weight => $grand_child)
+                                <li class="dd-item" data-id="{{ $grand_child['term']->id }}">
+                                  <!-- drag handle -->
+                                  <div class="handle dd-handle">
+                                    <i class="fa fa-ellipsis-v"></i>
+                                    <i class="fa fa-ellipsis-v"></i>
+                                    &nbsp;
+                                    <!-- checkbox -->
+                                    <!-- todo text -->
+                                    <span class="text">{{ $grand_child['term']->name }}</span>
+                                    <!-- Emphasis label -->
+                                    <!-- General tools such as edit or delete-->
+                                    <div class="pull-right">
+                                      <div class="btn-group">
+                                        {{ Form::open(array('method' => 'GET', 'route' => array($prefix . 'terms.edit', $grand_child['term']->id))) }}
+                                        {{ Form::button(Lang::get('taxonomy::vocabulary.button.edit'), array('class'=>'btn btn-xs btn-primary btn-flat', 'type' => 'submit')) }}
+                                        {{ Form::close() }}
+                                      </div>
+
+                                      <div class="btn-group">
+                                        {{ Form::open(array('method' => 'DELETE', 'route' => array($prefix . 'terms.destroy', $grand_child['term']->id))) }}
+                                        {{ Form::button(Lang::get('taxonomy::vocabulary.button.delete'), array('class'=>'delete-confirm-dialog btn btn-xs btn-danger btn-flat', 'type' => 'submit')) }}
+                                        {{ Form::close() }}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                              @endforeach
+                            @endif
+                          </ul>
+
+                        </li>
+                      @endforeach
+                    @endif
                   </ul>
                 </li>
               @endforeach
@@ -156,12 +192,11 @@
        listNodeName: 'ul',
        expandBtnHTML: '',
        collapseBtnHTML: '',
-       maxDepth:2,
+       maxDepth:3,
      });
 
      $('.dd').on('change', function() {
        var json = JSON.stringify($(this).nestable('serialize'));
-       console.log(json)
        $.post("{{ route($prefix .'taxonomy.order.terms', $vocabulary->id) }}", json);
      });
    });

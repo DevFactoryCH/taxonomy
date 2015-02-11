@@ -56,22 +56,28 @@ class TaxonomyController extends \BaseController {
 
     $terms = $vocabulary->terms()->orderBy('parent', 'ASC')->orderBy('weight', 'ASC')->get();
 
-    $ordered_terms = [];
-    foreach ($terms as $term) {
-      if (!$term->parent) {
-        $ordered_terms[$term->id] = [
-          'term' => $term,
-          'children' => [],
-        ];
-      }
-      else {
-        $ordered_terms[$term->parent]['children'][] = $term;
-      }
-    }
-
-    $terms = $ordered_terms;
+    $terms = $this->parseTree($terms);
 
     return View::make('taxonomy::vocabulary.edit', compact('vocabulary', 'terms'));
+  }
+
+  private function parseTree($tree, $parent = 0) {
+    $return = array();
+
+    // Traverse the tree and search for direct children of the root
+    foreach($tree as $key => $term) {
+      // A direct child is found
+      if ($term->parent == $parent) {
+        // Remove item from tree (we don't need to traverse this again)
+        unset($tree[$key]);
+        // Append the child into result array and parse its children
+        $return[] = array(
+          'term' => $term,
+          'children' => $this->parseTree($tree, $term->id)
+        );
+      }
+    }
+    return empty($return) ? null : $return;
   }
 
   public function orderTerms($id) {
@@ -99,6 +105,23 @@ class TaxonomyController extends \BaseController {
         $child_term->weight = $child_key;
 
         $child_term->save();
+
+        if (empty($child->children)) {
+          continue;
+        }
+
+        foreach ($child->children as $grand_child_key => $grand_child){
+          $grand_child = Term::find($grand_child->id);
+
+          echo "<pre>";
+          print_r("In child | ". $grand_child->name);
+          echo "</pre>";
+
+          $grand_child->parent = $child_term->id;
+          $grand_child->weight = $grand_child_key;
+
+          $grand_child->save();
+        }
       }
     }
 
