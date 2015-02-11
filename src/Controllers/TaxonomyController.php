@@ -61,6 +61,15 @@ class TaxonomyController extends \BaseController {
     return View::make('taxonomy::vocabulary.edit', compact('vocabulary', 'terms'));
   }
 
+  /**
+   * Recursive method to build the heirarchy tree of terms for the nestable
+   * component in the backoffice.
+   *
+   * @param mixed $tree
+   * @param int   $parent
+   *
+   * @return array
+   */
   private function parseTree($tree, $parent = 0) {
     $return = array();
 
@@ -80,6 +89,14 @@ class TaxonomyController extends \BaseController {
     return empty($return) ? null : $return;
   }
 
+  /**
+   * Helper function to update the terms parent/weight values after
+   * being moved in the admin interface
+   *
+   * @param int $id
+   *
+   * @return void
+   */
   public function orderTerms($id) {
     $this->vocabulary->find($id);
 
@@ -112,10 +129,6 @@ class TaxonomyController extends \BaseController {
 
         foreach ($child->children as $grand_child_key => $grand_child){
           $grand_child = Term::find($grand_child->id);
-
-          echo "<pre>";
-          print_r("In child | ". $grand_child->name);
-          echo "</pre>";
 
           $grand_child->parent = $child_term->id;
           $grand_child->weight = $grand_child_key;
