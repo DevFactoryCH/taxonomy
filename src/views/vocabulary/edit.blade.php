@@ -22,7 +22,7 @@
    .dd-empty,
    .dd-placeholder { display: block; position: relative; margin: 0; padding: 0; min-height: 20px; font-size: 13px; line-height: 20px; }
 
-   .dd-handle { display: block; height: 35px; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+   .dd-handle { display: block; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
                 background: #f3f3f3;
                 box-sizing: border-box; -moz-box-sizing: border-box;
                 }
@@ -52,6 +52,7 @@
      box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
    }
 
+   span.text { display:inline-block; width: calc(100% - 115px) }
   </style>
 
   <p>
@@ -163,6 +164,10 @@
        console.log(json)
        $.post("{{ route($prefix .'taxonomy.order.terms', $vocabulary->id) }}", json);
      });
+   });
+
+   $('.dd-handle button').on('mousedown', function(e){
+     e.stopPropagation();
    });
   </script>
 
