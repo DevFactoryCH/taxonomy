@@ -92,13 +92,13 @@
                       <!-- General tools such as edit or delete-->
                       <div class="pull-right">
                         <div class="btn-group">
-                          {{ Form::open(array('method' => 'GET', 'route' => array($prefix . 'terms.edit', $term_id))) }}
+                          {{ Form::open(array('method' => 'GET', 'route' => array($prefix . 'terms.edit', $parent['term']->id))) }}
                           {{ Form::button(Lang::get('taxonomy::vocabulary.button.edit'), array('class'=>'btn btn-xs btn-primary btn-flat', 'type' => 'submit')) }}
                           {{ Form::close() }}
                         </div>
 
                         <div class="btn-group">
-                          {{ Form::open(array('method' => 'DELETE', 'route' => array($prefix . 'terms.destroy', $term_id))) }}
+                          {{ Form::open(array('method' => 'DELETE', 'route' => array($prefix . 'terms.destroy', $parent['term']->id))) }}
                           {{ Form::button(Lang::get('taxonomy::vocabulary.button.delete'), array('class'=>'delete-confirm-dialog btn btn-xs btn-danger btn-flat', 'type' => 'submit')) }}
                           {{ Form::close() }}
                         </div>
