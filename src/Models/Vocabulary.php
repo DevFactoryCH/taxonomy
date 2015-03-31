@@ -17,7 +17,7 @@ class Vocabulary extends \Eloquent {
   }
 
   public function relations() {
-    return $this->HasMany('TermRelation');
+    return $this->HasMany('Devfactory\Taxonomy\Models\TermRelation');
   }
 
 }
