@@ -109,4 +109,18 @@ trait TaxonomyTrait {
       $q->where('term_id', '=', $term_id);
     });
   }
+
+  /**
+   * Filter the model to return a subset of entries matching the term IDS
+   *
+   * @param object $query
+   * @param array $term_id
+   *
+   * @return void
+   */
+  public function scopeGetAllByTermIds($query, $term_ids) {
+    return $query->whereHas('related', function($q) use($term_id) {
+      $q->whereIn('term_id', $term_ids);
+    });
+  }
 }
