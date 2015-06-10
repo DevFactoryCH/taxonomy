@@ -24,7 +24,7 @@ trait TaxonomyTrait {
    *  The TermRelation object
    */
   public function addTerm($term_id) {
-    $term = ($term instanceof Term) ? $term_id : Term::findOrFail($term_id);
+    $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
 
     $term_relation = [
       'term_id' => $term->id,
