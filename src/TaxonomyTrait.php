@@ -24,7 +24,7 @@ trait TaxonomyTrait {
    *  The TermRelation object
    */
   public function addTerm($term_id) {
-    $term = Term::findOrFail($term_id);
+    $term = ($term instanceof Term) ? $term_id : Term::findOrFail($term_id);
 
     $term_relation = [
       'term_id' => $term->id,
@@ -83,6 +83,7 @@ trait TaxonomyTrait {
    *  TRUE if the term relation has been deleted, otherwise FALSE
    */
   public function removeTerm($term_id) {
+    $term_id = ($term_id instanceof Term) ? $term_id->id : $term_id;
     return $this->related()->where('term_id', $term_id)->delete();
   }
 
