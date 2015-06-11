@@ -18,7 +18,7 @@ trait TaxonomyTrait {
    * Add an existing term to the inheriting model
    *
    * @param $term_id int
-   *  The ID of the term to link
+   *  The ID of the term or an instance of the Term object
    *
    * @return object
    *  The TermRelation object
@@ -35,10 +35,10 @@ trait TaxonomyTrait {
   }
 
   /**
-   * Add an existing term to the inheriting model
+   * Check if the Model instance has the passed term as an existing relation
    *
-   * @param $term_id int
-   *  The ID of the term to link
+   * @param mixed $term_id
+   *  The ID of the term or an instance of the Term object
    *
    * @return object
    *  The TermRelation object
@@ -51,7 +51,7 @@ trait TaxonomyTrait {
       'vocabulary_id' => $term->vocabulary_id,
     ];
 
-    return ($this->related()->where('term_id', $term_id)->count()) ? true : false;
+    return ($this->related()->where('term_id', $term_id)->count()) ? TRUE : FALSE;
   }
 
   /**
@@ -97,7 +97,7 @@ trait TaxonomyTrait {
    * Unlink the given term with the current model object
    *
    * @param $term_id int
-   *  The ID of the term
+   *  The ID of the term or an instance of the Term object
    *
    * @return bool
    *  TRUE if the term relation has been deleted, otherwise FALSE
