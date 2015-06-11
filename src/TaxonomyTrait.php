@@ -24,7 +24,7 @@ trait TaxonomyTrait {
    *  The TermRelation object
    */
   public function addTerm($term_id) {
-    $term = Term::findOrFail($term_id);
+    $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
 
     $term_relation = [
       'term_id' => $term->id,
@@ -32,6 +32,26 @@ trait TaxonomyTrait {
     ];
 
     $this->related()->save(new TermRelation($term_relation));
+  }
+
+  /**
+   * Add an existing term to the inheriting model
+   *
+   * @param $term_id int
+   *  The ID of the term to link
+   *
+   * @return object
+   *  The TermRelation object
+   */
+  public function hasTerm($term_id) {
+    $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
+
+    $term_relation = [
+      'term_id' => $term->id,
+      'vocabulary_id' => $term->vocabulary_id,
+    ];
+
+    return ($this->related()->where('term_id', $term_id)->count()) ? true : false;
   }
 
   /**
@@ -83,6 +103,7 @@ trait TaxonomyTrait {
    *  TRUE if the term relation has been deleted, otherwise FALSE
    */
   public function removeTerm($term_id) {
+    $term_id = ($term_id instanceof Term) ? $term_id->id : $term_id;
     return $this->related()->where('term_id', $term_id)->delete();
   }
 
