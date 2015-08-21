@@ -21,8 +21,7 @@ class TaxonomyServiceProvider extends ServiceProvider {
   public function boot() {
     $this->publishConfig();
     $this->publishMigration();
-
-    include __DIR__.'/routes.php';
+    $this->loadViewsFrom(__DIR__ . '/views', 'taxonomy');
   }
 
   /**

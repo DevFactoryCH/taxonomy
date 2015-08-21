@@ -14,18 +14,32 @@ use Helpers;
 use Devfactory\Taxonomy\Models\Vocabulary;
 use Devfactory\Taxonomy\Models\Term;
 
-class TaxonomyController extends \BaseController {
+use Illuminate\Foundation\Bus\DispatchesCommands;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+
+class TaxonomyController extends BaseController {
+
+	use DispatchesCommands, ValidatesRequests;
+
 
   protected $vocabulary;
   protected $route_prefix;
 
   public function __construct(Vocabulary $vocabulary) {
-    parent::__construct();
-
     $this->vocabulary = $vocabulary;
-    $this->route_prefix = rtrim(Config::get('taxonomy::route_prefix'), '.') . '.';
+    $this->route_prefix = rtrim(config('taxonomy.route_prefix'), '.') . '.';
 
-    View::composer('taxonomy::*', 'Devfactory\Taxonomy\Composers\TaxonomyComposer');
+    $layout = (object) [
+      'extends' => config('taxonomy.config.layout.extends'),
+      'header' => config('taxonomy.config.layout.header'),
+      'content' => config('taxonomy.config.layout.content'),
+    ];
+
+    View::share('layout', $layout);
+  }
+
+  public function index() {
   }
 
   /**
@@ -33,10 +47,10 @@ class TaxonomyController extends \BaseController {
    *
    * @return Response
    */
-  public function index() {
+  public function getIndex() {
     $vocabularies = $this->vocabulary->paginate(10);
 
-    return View::make('taxonomy::vocabulary.index', compact('vocabularies'));
+    return view('taxonomy::vocabulary.index', [ 'vocabularies' => $vocabularies]);
   }
 
   /**
@@ -45,7 +59,7 @@ class TaxonomyController extends \BaseController {
    * @param  int  $id
    * @return Response
    */
-  public function edit($id) {
+  public function getEdit($id) {
     $vocabulary = $this->vocabulary->find($id);
 
     Session::put('vocabulary_id', $vocabulary->id);
@@ -74,7 +88,7 @@ class TaxonomyController extends \BaseController {
     return View::make('taxonomy::vocabulary.edit', compact('vocabulary', 'terms'));
   }
 
-  public function orderTerms($id) {
+  public function postOrderTerms($id) {
     $this->vocabulary->find($id);
 
     $request = \Request::instance();
