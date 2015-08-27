@@ -1,5 +1,7 @@
 <?php namespace Devfactory\Taxonomy\Controllers;
 
+use Illuminate\Http\Request;
+
 use Config;
 use Input;
 use Lang;
@@ -39,9 +41,6 @@ class TaxonomyController extends BaseController {
     View::share('layout', $layout);
   }
 
-  public function index() {
-  }
-
   /**
    * Display a listing of the resource.
    *
@@ -51,6 +50,40 @@ class TaxonomyController extends BaseController {
     $vocabularies = $this->vocabulary->paginate(10);
 
     return view('taxonomy::vocabulary.index', [ 'vocabularies' => $vocabularies]);
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function getCreate() {
+    return view('taxonomy::vocabulary.create');
+  }
+
+  public function postStore(Request $request) {
+    $this->validate($request, isset($this->vocabulary->rules_create) ? $this->vocabulary->rules_create : $this->vocabulary->rules);
+
+    Vocabulary::create(Input::only('name'));
+
+    return Redirect::to(action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getIndex'))->with('success', 'Created');
+
+  }
+
+  public function deleteDestroy($id) {
+    $this->vocabulary->destroy($id);
+
+    return response()->json(['OK']);
+  }
+
+  public function putUpdate(Request $request, $id) {
+    $this->validate($request, isset($this->vocabulary->rules_create) ? $this->vocabulary->rules_create : $this->vocabulary->rules);
+
+    $vocabulary = $this->vocabulary->findOrFail($id);
+    $vocabulary->update(Input::only('name'));
+
+    return Redirect::to(action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getIndex'))->with('success', 'Updated');
+
   }
 
   /**

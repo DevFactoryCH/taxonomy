@@ -1,4 +1,4 @@
-@extends($layout->extends)
+@Extends($layout->extends)
 
 @section($layout->header)
   <h1>@lang('taxonomy::terms.create.header')</h1>
@@ -8,7 +8,7 @@
 
   <div class="row">
 
-    {!! Form::model($vocabulary, array('method' => 'PUT', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@putUpdate', $vocabulary->id), 'id' => 'app-create', 'class' => 'form')) !!}
+    {!! Form::open(array('method'=>'POST', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@postStore'))) !!}
 
     <div class="col-md-6">
 
@@ -27,7 +27,7 @@
 
         <div class="box-footer">
           <button type="submit" class="btn btn-flat btn-primary">
-            @lang('taxonomy::taxonomy.button.update')
+            @lang('taxonomy::taxonomy.button.create')
           </button>
         </div>
 

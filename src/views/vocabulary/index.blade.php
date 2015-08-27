@@ -7,6 +7,14 @@
 @section($layout->content)
 
   <div class="row">
+    <div class="col-sm-12">
+        {!! Form::open(array('method'=>'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getCreate'))) !!}
+        {!! Form::submit(trans('general.buttons.add'), array('class' => 'btn btn-primary btn-flat margin-bottom')) !!}
+        {!! Form::close() !!}
+   </div>
+  </div>
+
+  <div class="row">
 
     <div class="col-sm-12 col-md-6">
 
@@ -38,13 +46,20 @@
             <tbody>
               @foreach ($vocabularies as $vocabulary)
                 <tr>
-                  <td>{{ $vocabulary->name }}</td>
+                    <td><a href="{!! action('\Devfactory\Taxonomy\Controllers\TermsController@getIndex', ['id' => $vocabulary->id]) !!}">{!! $vocabulary->name !!}</a></td>
                   <td class="text-right">
 
                     <div class="btn-group">
-                      {{ Form::open(array('method' => 'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getEdit'), $vocabulary->id)) }}
-		      {{ Form::button(Lang::get('taxonomy::vocabulary.index.button.view_terms'), array('class'=>'btn btn-xs btn-primary btn-flat', 'type' => 'submit')) }}
-		      {{ Form::close() }}
+                    <div class="btn-group">
+                          {!! Form::open(array('method'=>'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getEdit', $vocabulary->id))) !!}
+                          {!! Form::submit(trans('general.buttons.edit'), array('class' => 'btn btn-xs btn-primary btn-flat')) !!}
+                          {!! Form::close() !!}
+                      </div>
+                      <div class="btn-group">
+                          {!! Form::open(array('method'=>'DELETE', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@deleteDestroy', $vocabulary->id))) !!}
+                          {!! Form::submit(trans('general.buttons.delete'), array('class' => 'delete-confirm-dialog btn btn-xs btn-danger btn-flat')) !!}
+                          {!! Form::close() !!}
+                      </div>
                     </div>
 
                   </td>

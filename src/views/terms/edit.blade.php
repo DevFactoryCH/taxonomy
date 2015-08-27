@@ -6,9 +6,9 @@
 
 @section($layout->content)
 
-  <div class="row">
+    <div class="row">
 
-    {{ Form::open(array('method' => 'PUT', 'route' => array($prefix .'terms.update', $term->id), 'id' => 'app-update', 'class' => 'form')) }}
+    {!! Form::open(array('method' => 'PUT', 'url' => action('\Devfactory\Taxonomy\Controllers\TermsController@putUpdate', $term->id), 'id' => 'app-update', 'class' => 'form')) !!}
 
     <div class="col-md-6">
 
@@ -16,11 +16,11 @@
 
         <div class="box-body">
 
-          <div class="form-group{{ $errors->has('name') ? ' has-error has-feedback' : '' }}">
-            {{ Form::label('name', Lang::get('taxonomy::terms.edit.label.name'), ['class' => 'control-label']) }}
-            {{ Form::text('name', $term->name, ['class' => 'form-control']) }}
-            {{ $errors->has('name') ? Form::label('error', $errors->first('name'), array('class' => 'control-label')) : '' }}
-            {{ $errors->has('name') ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '' }}
+          <div class="form-group{!! $errors->has('name') ? ' has-error has-feedback' : '' !!}">
+            {!! Form::label('name', Lang::get('taxonomy::terms.edit.label.name'), ['class' => 'control-label']) !!}
+            {!! Form::text('name', $term->name, ['class' => 'form-control']) !!}
+            {!! $errors->has('name') ? Form::label('error', $errors->first('name'), array('class' => 'control-label')) : '' !!}
+            {!! $errors->has('name') ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '' !!}
           </div>
 
         </div>
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    {{ Form::close() }}
+    {!! Form::close() !!}
 
   </div>
 
