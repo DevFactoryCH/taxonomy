@@ -84,7 +84,7 @@
             <ul class="dd-list">
               @foreach ($terms as $term_id => $parent)
                 <li class="dd-item" data-id="{!! $parent['term']->id !!}">
-                    <!-- drag handle -->
+                  <!-- drag handle -->
                   <div class="handle dd-handle">
                     <i class="fa fa-ellipsis-v"></i>
                     <i class="fa fa-ellipsis-v"></i>
@@ -167,11 +167,24 @@
      $('.dd').on('change', function() {
        var json = JSON.stringify($(this).nestable('serialize'));
        console.log(json)
-       $.post("{!! action('\Devfactory\Taxonomy\Controllers\TaxonomyController@postOrderTerms', $vocabulary->id) !!}", json);
+       $.ajax({
+         url: '{!! action('\Devfactory\Taxonomy\Controllers\TaxonomyController@postOrderTerms', $vocabulary->id) !!}',
+         type: 'post',
+         data: {
+           json
+         },
+         headers: {
+           'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+         },
+         dataType: 'json',
+         success: function (data) {
+           console.info(data);
+         }
+       });
      });
    });
   </script>
 
-  {!! HTML::script('packages/devfactory/taxonomy/js/jquery.nestable.js') !!}
+  {!! HTML::script('vendor/taxonomy/js/jquery.nestable.js') !!}
 
 @stop

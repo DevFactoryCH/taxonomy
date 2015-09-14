@@ -46,7 +46,11 @@
             <tbody>
               @foreach ($vocabularies as $vocabulary)
                 <tr>
-                    <td><a href="{!! action('\Devfactory\Taxonomy\Controllers\TermsController@getIndex', ['id' => $vocabulary->id]) !!}">{!! $vocabulary->name !!}</a></td>
+                  <td>
+                    <a href="{!! action('\Devfactory\Taxonomy\Controllers\TermsController@getIndex', ['id' => $vocabulary->id]) !!}">
+                      {!! $vocabulary->name !!}
+                    </a>
+                  </td>
                   <td class="text-right">
 
                     <div class="btn-group">

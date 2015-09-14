@@ -125,8 +125,7 @@ class TaxonomyController extends BaseController {
     $this->vocabulary->find($id);
 
     $request = \Request::instance();
-    $json = $request->getContent();
-    $content = json_decode($json);
+    $content = json_decode(Input::get('json'));
 
     foreach ($content as $parent_key => $parent){
       $parent_term = Term::find($parent->id);

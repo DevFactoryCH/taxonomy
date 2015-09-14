@@ -21,7 +21,9 @@ class TaxonomyServiceProvider extends ServiceProvider {
   public function boot() {
     $this->publishConfig();
     $this->publishMigration();
+    $this->publishAssets();
     $this->loadViewsFrom(__DIR__ . '/views', 'taxonomy');
+    $this->loadTranslationsFrom(__DIR__ . '/lang', 'taxonomy');
   }
 
   /**
@@ -70,5 +72,14 @@ class TaxonomyServiceProvider extends ServiceProvider {
       __DIR__ . '/migrations' => base_path('database/migrations')
     ]);
   }
+
+  protected function publishAssets() {
+    $this->publishes(
+      [
+        __DIR__.'/../public/' => public_path('vendor/taxonomy'),
+      ]
+      , 'public');
+  }
+
 
 }
