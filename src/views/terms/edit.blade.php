@@ -27,7 +27,7 @@
 
         <div class="box-footer">
           <button type="submit" class="btn btn-flat btn-primary">
-            @lang('taxonomy::taxonomy.button.save')
+            @lang('taxonomy::terms.edit.button.save')
           </button>
         </div>
 

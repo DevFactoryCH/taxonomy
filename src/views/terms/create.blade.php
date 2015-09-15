@@ -29,7 +29,7 @@
 
         <div class="box-footer">
           <button type="submit" class="btn btn-flat btn-primary">
-            @lang('taxonomy::taxonomy.button.create')
+            @lang('taxonomy::terms.create.button.add')
           </button>
         </div>
 

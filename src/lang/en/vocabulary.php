@@ -24,7 +24,10 @@ return array(
     'label' => array(
       'terms' => 'Terms',
     ),
-    'button_add_term' => 'Add a term',
+    'button' => array(
+      'add_term' => 'Add a term',
+      'back' => 'Back',
+    ),
   ),
   'vocabularies' => 'Vocabularies',
 );

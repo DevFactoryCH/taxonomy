@@ -54,23 +54,24 @@
 
   </style>
 
-  <p>
-    {!! Form::open(array('method' => 'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TermsController@getCreate', $vocabulary->id))) !!}
-    {!! Form::button(Lang::get('taxonomy::vocabulary.edit.button_add_term'), array('class'=>'btn btn-primary btn-flat', 'type' => 'submit')) !!}
-    {!! Form::close() !!}
-  </p>
-
-  <p>
-    {!! Form::open(array('method' => 'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getIndex'))) !!}
-    {!! Form::button(Lang::get('taxonomy::vocabulary.edit.button_back'), array('class'=>'btn btn-primary btn-flat', 'type' => 'submit')) !!}
-    {!! Form::close() !!}
-  </p>
-
   <div class="row">
 
     <div class="col-md-6">
 
       <div class="box box-primary">
+
+          <div class="box-header">
+              <div class="btn-group">
+                  {!! Form::open(array('method' => 'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getIndex'))) !!}
+                  {!! Form::button(Lang::get('taxonomy::vocabulary.edit.button.back'), array('class'=>'btn btn-primary btn-flat', 'type' => 'submit')) !!}
+                  {!! Form::close() !!}
+              </div>
+              <div class="btn-group">
+                  {!! Form::open(array('method' => 'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TermsController@getCreate', $vocabulary->id))) !!}
+                  {!! Form::button(Lang::get('taxonomy::vocabulary.edit.button.add_term'), array('class'=>'btn btn-success btn-flat', 'type' => 'submit')) !!}
+                  {!! Form::close() !!}
+              </div>
+          </div>
 
         <div class="box-body">
 
@@ -166,7 +167,6 @@
 
      $('.dd').on('change', function() {
        var json = JSON.stringify($(this).nestable('serialize'));
-       console.log(json)
        $.ajax({
          url: '{!! action('\Devfactory\Taxonomy\Controllers\TaxonomyController@postOrderTerms', $vocabulary->id) !!}',
          type: 'post',
@@ -176,11 +176,12 @@
          headers: {
            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
          },
-         dataType: 'json',
-         success: function (data) {
-           console.info(data);
-         }
+         dataType: 'json'
        });
+     });
+
+     $('.dd-handle button').on('mousedown', function(e){
+       e.stopPropagation();
      });
    });
   </script>
