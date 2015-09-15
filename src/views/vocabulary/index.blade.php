@@ -1,7 +1,7 @@
 @extends($layout->extends)
 
 @section($layout->header)
-  <h1>{{ trans('taxonomy.vocabulary.index.header') }}</h1>
+  <h1>@lang('taxonomy::vocabulary.index.header')</h1>
 @stop
 
 @section($layout->content)

@@ -61,7 +61,7 @@ class TaxonomyServiceProvider extends ServiceProvider {
   protected function publishConfig() {
     $this->publishes([
       __DIR__ . '/config/config.php' => config_path('taxonomy.config.php'),
-    ]);
+    ], 'config');
   }
 
   /**
@@ -74,12 +74,9 @@ class TaxonomyServiceProvider extends ServiceProvider {
   }
 
   protected function publishAssets() {
-    $this->publishes(
-      [
-        __DIR__.'/../public/' => public_path('vendor/taxonomy'),
-      ]
-      , 'public');
+    $this->publishes([
+      __DIR__.'/../public/' => public_path('vendor/taxonomy'),
+    ], 'public');
   }
-
 
 }

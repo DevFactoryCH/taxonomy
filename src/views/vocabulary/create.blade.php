@@ -1,7 +1,7 @@
 @Extends($layout->extends)
 
 @section($layout->header)
-  <h1>@lang('taxonomy::terms.create.header')</h1>
+  <h1>@lang('taxonomy::vocabulary.create.header')</h1>
 @stop
 
 @section($layout->content)
@@ -27,7 +27,7 @@
 
         <div class="box-footer">
           <button type="submit" class="btn btn-flat btn-primary">
-            @lang('taxonomy::taxonomy.button.create')
+            @lang('taxonomy::vocabulary.create.button.create')
           </button>
         </div>
 
