@@ -131,7 +131,7 @@
                             </div>
 
                             <div class="btn-group">
-                              {!! Form::open(array('method' => 'DELETE', 'url' => action('\Devfactory\Taxonomy\Controllers\TermsController@getEdit', $child->id))) !!}
+                              {!! Form::open(array('method' => 'DELETE', 'url' => action('\Devfactory\Taxonomy\Controllers\TermsController@deleteDestroy', $child->id))) !!}
                               {!! Form::button(Lang::get('taxonomy::vocabulary.button.delete'), array('class'=>'delete-confirm-dialog btn btn-xs btn-danger btn-flat', 'type' => 'submit')) !!}
                               {!! Form::close() !!}
                             </div>

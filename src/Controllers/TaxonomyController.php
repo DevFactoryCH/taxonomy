@@ -15,6 +15,7 @@ use Helpers;
 
 use Devfactory\Taxonomy\Models\Vocabulary;
 use Devfactory\Taxonomy\Models\Term;
+use Devfactory\Taxonomy\Models\TermRelation;
 
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Routing\Controller as BaseController;
@@ -70,12 +71,28 @@ class TaxonomyController extends BaseController {
 
   }
 
+  /**
+   * Destory a resource.
+   *
+   * @return Response
+   */
   public function deleteDestroy($id) {
+    $vocabulary = $this->vocabulary->find($id);
+
+    $terms = $vocabulary->terms->lists('id')->toArray();
+
+    TermRelation::whereIn('term_id',$terms)->delete();
+    Term::destroy($terms);
     $this->vocabulary->destroy($id);
 
     return response()->json(['OK']);
   }
 
+  /**
+   * Update a resource.
+   *
+   * @return Response
+   */
   public function putUpdate(Request $request, $id) {
     $this->validate($request, isset($this->vocabulary->rules_create) ? $this->vocabulary->rules_create : $this->vocabulary->rules);
 
