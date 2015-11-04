@@ -127,7 +127,12 @@ trait TaxonomyTrait {
    */
   public function scopeGetAllByTermId($query, $term_id) {
     return $query->whereHas('related', function($q) use($term_id) {
-      $q->where('term_id', '=', $term_id);
+      if (is_array($term_id)) {
+        $q->whereIn('term_id', $term_id);
+      }
+      else {
+        $q->where('term_id', '=', $term_id);
+      }
     });
   }
 }
