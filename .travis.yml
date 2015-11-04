@@ -10,7 +10,7 @@ script: phpunit  --coverage-clover build/logs/clover.xml
 
 before_script:
   - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev
+  - php composer.phar install
 
 after_script:
   - php vendor/bin/test-reporter --stdout > codeclimate.json
