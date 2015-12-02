@@ -72,7 +72,7 @@ class Taxonomy {
     $vocabulary = $this->vocabulary->where('name', $name)->first();
 
     if (!is_null($vocabulary)) {
-      return $vocabulary->terms->lists('name', 'id');
+      return $vocabulary->terms->lists('name', 'id')->toArray();
     }
 
     return [];
