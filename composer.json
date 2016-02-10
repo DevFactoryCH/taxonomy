@@ -14,7 +14,7 @@
     "illuminate/support": "~5.0"
   },
   "require-dev": {
-    "mockery/mockery": "dev-master@dev",
+    "mockery/mockery": "0.9.*",
     "codeclimate/php-test-reporter": "dev-master"
   },
   "autoload": {
