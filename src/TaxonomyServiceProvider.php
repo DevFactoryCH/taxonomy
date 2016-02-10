@@ -50,7 +50,7 @@ class TaxonomyServiceProvider extends ServiceProvider {
    * @return void
    */
   protected function registerServices() {
-    $this->app->bindShared('taxonomy', function ($app) {
+    $this->app->singleton('taxonomy', function ($app) {
       return new Taxonomy(new Vocabulary(), new Term());
     });
   }
