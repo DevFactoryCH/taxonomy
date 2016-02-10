@@ -22,7 +22,8 @@ class Term extends \Eloquent {
 	}
 
   public function childrens() {
-    return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent', 'id');
+    return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent', 'id')
+      ->orderBy('weight', 'ASC');
   }
 
   public function parentTerm() {
