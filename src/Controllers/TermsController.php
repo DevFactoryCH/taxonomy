@@ -139,6 +139,10 @@ class TermsController extends BaseController {
    * @return Response
    */
   public function deleteDestroy($id) {
+    // Delete children if any exist
+    Term::whereParent($id)->delete();
+
+    // Delete Term
     Term::destroy($id);
 
     return Response::make('OK', 200);
