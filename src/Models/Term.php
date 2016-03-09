@@ -14,7 +14,7 @@ class Term extends \Eloquent {
   ];
 
   public function termRelation() {
-    return $this->morphMany('TermRelation', 'relationable');
+    return $this->morphMany('Devfactory\Taxonomy\Models\TermRelation', 'relationable');
   }
 
 	public function vocabulary() {
