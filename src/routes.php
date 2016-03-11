@@ -1,6 +1,6 @@
 <?php
 
-$prefix = Config::get('taxonomy::route_prefix');
+$prefix = config('taxonomy.config.route_prefix');
 
 Route::group(array('prefix' => $prefix), function() use ($prefix) {
 

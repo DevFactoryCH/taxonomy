@@ -72,10 +72,59 @@ class Taxonomy {
     $vocabulary = $this->vocabulary->where('name', $name)->first();
 
     if (!is_null($vocabulary)) {
-      return $vocabulary->terms->lists('name', 'id');
+      return $vocabulary->terms->lists('name', 'id')->toArray();
     }
 
     return [];
+  }
+
+  /**
+   * Get a Vocabulary by name as an options array for dropdowns
+   *
+   * @param string $name
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getVocabularyByNameOptionsArray($name) {
+    $vocabulary = $this->vocabulary->where('name', $name)->first();
+
+    if (is_null($vocabulary)) {
+      return [];
+    }
+
+    $parents = $this->term->whereParent(0)
+      ->whereVocabularyId($vocabulary->id)
+      ->orderBy('weight', 'ASC')
+      ->get();
+
+    $options = [];
+    foreach ($parents as $parent) {
+      $options[$parent->id] = $parent->name;
+      $this->recurse_children($parent, $options);
+    }
+
+    return $options;
+  }
+
+  /**
+   * Recursively visit the children of a term and generate the '- ' option array for dropdowns
+   *
+   * @param Object $parent
+   * @param array  $options
+   * @param int    $depth
+   *
+   * @return array
+   */
+  private function recurse_children($parent, &$options, $depth = 1) {
+    $parent->childrens->map(function($child) use (&$options, $depth) {
+      $options[$child->id] = str_repeat('-', $depth) .' '. $child->name;
+
+      if ($child->childrens) {
+        $this->recurse_children($child, $options, $depth+1);
+      }
+    });
   }
 
   /**

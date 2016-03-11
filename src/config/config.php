@@ -3,7 +3,7 @@
 return array(
 	'route_prefix' => 'admin',
   'layout' => [
-    'extends' => 'layouts.admin',
+    'extends' => 'admin',
     'header' => 'header',
     'content' => 'content',
   ],

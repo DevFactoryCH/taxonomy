@@ -8,7 +8,7 @@ class Vocabulary extends \Eloquent {
 
   protected $table = 'vocabularies';
 
-  public static $rules = [
+  public $rules = [
     'name' => 'required'
   ];
 

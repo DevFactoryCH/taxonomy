@@ -1,5 +1,7 @@
 <?php namespace Devfactory\Taxonomy\Controllers;
 
+use Illuminate\Http\Request;
+
 use Config;
 use Input;
 use Lang;
@@ -13,19 +15,31 @@ use Helpers;
 
 use Devfactory\Taxonomy\Models\Vocabulary;
 use Devfactory\Taxonomy\Models\Term;
+use Devfactory\Taxonomy\Models\TermRelation;
 
-class TaxonomyController extends \BaseController {
+use Illuminate\Foundation\Bus\DispatchesCommands;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+
+class TaxonomyController extends BaseController {
+
+	use DispatchesCommands, ValidatesRequests;
+
 
   protected $vocabulary;
   protected $route_prefix;
 
   public function __construct(Vocabulary $vocabulary) {
-    parent::__construct();
-
     $this->vocabulary = $vocabulary;
-    $this->route_prefix = rtrim(Config::get('taxonomy::route_prefix'), '.') . '.';
+    $this->route_prefix = rtrim(config('taxonomy.route_prefix'), '.') . '.';
 
-    View::composer('taxonomy::*', 'Devfactory\Taxonomy\Composers\TaxonomyComposer');
+    $layout = (object) [
+      'extends' => config('taxonomy.config.layout.extends'),
+      'header' => config('taxonomy.config.layout.header'),
+      'content' => config('taxonomy.config.layout.content'),
+    ];
+
+    View::share('layout', $layout);
   }
 
   /**
@@ -33,10 +47,60 @@ class TaxonomyController extends \BaseController {
    *
    * @return Response
    */
-  public function index() {
+  public function getIndex() {
     $vocabularies = $this->vocabulary->paginate(10);
 
-    return View::make('taxonomy::vocabulary.index', compact('vocabularies'));
+    return view('taxonomy::vocabulary.index', [ 'vocabularies' => $vocabularies]);
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return Response
+   */
+  public function getCreate() {
+    return view('taxonomy::vocabulary.create');
+  }
+
+  public function postStore(Request $request) {
+    $this->validate($request, isset($this->vocabulary->rules_create) ? $this->vocabulary->rules_create : $this->vocabulary->rules);
+
+    Vocabulary::create(Input::only('name'));
+
+    return Redirect::to(action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getIndex'))->with('success', 'Created');
+
+  }
+
+  /**
+   * Destory a resource.
+   *
+   * @return Response
+   */
+  public function deleteDestroy($id) {
+    $vocabulary = $this->vocabulary->find($id);
+
+    $terms = $vocabulary->terms->lists('id')->toArray();
+
+    TermRelation::whereIn('term_id',$terms)->delete();
+    Term::destroy($terms);
+    $this->vocabulary->destroy($id);
+
+    return response()->json(['OK']);
+  }
+
+  /**
+   * Update a resource.
+   *
+   * @return Response
+   */
+  public function putUpdate(Request $request, $id) {
+    $this->validate($request, isset($this->vocabulary->rules_create) ? $this->vocabulary->rules_create : $this->vocabulary->rules);
+
+    $vocabulary = $this->vocabulary->findOrFail($id);
+    $vocabulary->update(Input::only('name'));
+
+    return Redirect::to(action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getIndex'))->with('success', 'Updated');
+
   }
 
   /**
@@ -45,7 +109,7 @@ class TaxonomyController extends \BaseController {
    * @param  int  $id
    * @return Response
    */
-  public function edit($id) {
+  public function getEdit($id) {
     $vocabulary = $this->vocabulary->find($id);
 
     Session::put('vocabulary_id', $vocabulary->id);
@@ -74,12 +138,11 @@ class TaxonomyController extends \BaseController {
     return View::make('taxonomy::vocabulary.edit', compact('vocabulary', 'terms'));
   }
 
-  public function orderTerms($id) {
+  public function postOrderTerms($id) {
     $this->vocabulary->find($id);
 
     $request = \Request::instance();
-    $json = $request->getContent();
-    $content = json_decode($json);
+    $content = json_decode(Input::get('json'));
 
     foreach ($content as $parent_key => $parent){
       $parent_term = Term::find($parent->id);

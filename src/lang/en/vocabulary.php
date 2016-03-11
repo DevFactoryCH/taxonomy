@@ -19,12 +19,24 @@ return array(
     ),
     'header' => 'Taxonomy',
   ),
+  'create' => array(
+    'header' => 'Create a new Vocabulary',
+    'label' => array(
+      'name' => 'Name',
+    ),
+    'button' => array(
+      'create' => 'Create',
+    ),
+  ),
   'edit' => array(
     'header' => 'Viewing terms for - ',
     'label' => array(
       'terms' => 'Terms',
     ),
-    'button_add_term' => 'Add a term',
+    'button' => array(
+      'add_term' => 'Add a term',
+      'back' => 'Back',
+    ),
   ),
   'vocabularies' => 'Vocabularies',
 );

@@ -21,4 +21,12 @@ class Term extends \Eloquent {
 		return $this->belongsTo('Devfactory\Taxonomy\Models\Vocabulary');
 	}
 
+  public function childrens() {
+    return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent', 'id')
+      ->orderBy('weight', 'ASC');
+  }
+
+  public function parentTerm() {
+    return $this->hasOne('Devfactory\Taxonomy\Models\Term', 'id', 'parent');
+  }
 }

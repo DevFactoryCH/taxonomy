@@ -200,10 +200,14 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
     $vocabulary = new \StdClass();
 
     // Mock
+    $mockToArray = m::mock('toArray');
+    $mockToArray->shouldReceive('toArray')
+      ->andReturn(true);
+
     $mockList = m::mock('lists');
     $mockList->shouldReceive('lists')
       ->with('name', 'id')
-      ->andReturn(true);
+      ->andReturn($mockToArray);
 
     $vocabulary->terms = $mockList;
     $mockFirst = m::mock('first');

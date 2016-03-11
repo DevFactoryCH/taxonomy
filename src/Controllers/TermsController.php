@@ -14,18 +14,30 @@ use Helpers;
 use Devfactory\Taxonomy\Models\Vocabulary;
 use Devfactory\Taxonomy\Models\Term;
 
-class TermsController extends \BaseController {
+
+use Illuminate\Foundation\Bus\DispatchesCommands;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+
+class TermsController extends BaseController {
+
+	use DispatchesCommands, ValidatesRequests;
 
   protected $vocabulary;
   protected $route_prefix;
 
   public function __construct(Vocabulary $vocabulary) {
-    parent::__construct();
-
     $this->vocabulary = $vocabulary;
     $this->route_prefix = rtrim(Config::get('taxonomy::route_prefix'), '.') . '.';
 
-    View::composer('taxonomy::*', 'Devfactory\Taxonomy\Composers\TaxonomyComposer');
+
+    $layout = (object) [
+      'extends' => config('taxonomy.config.layout.extends'),
+      'header' => config('taxonomy.config.layout.header'),
+      'content' => config('taxonomy.config.layout.content'),
+    ];
+
+    View::share('layout', $layout);
   }
 
   /**
@@ -33,9 +45,7 @@ class TermsController extends \BaseController {
    *
    * @return Response
    */
-  public function create() {
-    $vocabulary_id = Session::get('vocabulary_id');
-
+  public function getCreate($vocabulary_id) {
     return View::make('taxonomy::terms.create', compact('vocabulary_id'));
   }
 
@@ -44,7 +54,7 @@ class TermsController extends \BaseController {
    *
    * @return Response
    */
-  public function store() {
+  public function postStore() {
     $validation = Validator::make(Input::all(), Term::$rules);
 
     if ($validation->fails()) {
@@ -58,7 +68,7 @@ class TermsController extends \BaseController {
 
     $term = \Taxonomy::createTerm($vocabulary->id, Input::get('name'));
 
-    return Redirect::route($this->route_prefix . 'taxonomy.edit', $vocabulary->id);
+    return Redirect::to(action('\Devfactory\Taxonomy\Controllers\TermsController@getIndex', ['id' => $vocabulary->id]))->with('success', 'Created');
   }
 
   /**
@@ -67,14 +77,36 @@ class TermsController extends \BaseController {
    * @param  int  $id
    * @return Response
    */
-  public function edit($id) {
+  public function getEdit($id) {
     $term = Term::find($id);
 
     if (is_null($term)) {
       return Redirect::back($this->route_prefix . 'taxonomy.index');
     }
 
-    return View::make('taxonomy::terms.edit', compact('term'));
+     return View::make('taxonomy::terms.edit', compact('term'));
+  }
+
+  public function getIndex() {
+    $vocabulary = Vocabulary::findOrFail(Input::get('id'));
+    $terms = $vocabulary->terms()->orderBy('parent', 'ASC')->orderBy('weight', 'ASC')->get();
+
+    $ordered_terms = [];
+    foreach ($terms as $term) {
+      if (!$term->parent) {
+        $ordered_terms[$term->id] = [
+          'term' => $term,
+          'children' => [],
+        ];
+      }
+      else {
+        $ordered_terms[$term->parent]['children'][] = $term;
+      }
+    }
+
+    $terms = $ordered_terms;
+
+    return view('taxonomy::terms.index', compact('vocabulary', 'terms'));
   }
 
   /**
@@ -83,7 +115,7 @@ class TermsController extends \BaseController {
    * @param  int  $id
    * @return Response
    */
-  public function update($id) {
+  public function putUpdate($id) {
     $validation = Validator::make(Input::all(), Term::$rules);
 
     if ($validation->fails()) {
@@ -97,7 +129,7 @@ class TermsController extends \BaseController {
     $term->name = Input::get('name');
     $term->save();
 
-    return Redirect::route($this->route_prefix . 'taxonomy.edit', $term->vocabulary->id);
+    return Redirect::to(action('\Devfactory\Taxonomy\Controllers\TermsController@getIndex', ['id' => $term->vocabulary_id]))->with('success', 'Updated');
   }
 
   /**
@@ -106,7 +138,11 @@ class TermsController extends \BaseController {
    * @param  int  $id
    * @return Response
    */
-  public function destroy($id) {
+  public function deleteDestroy($id) {
+    // Delete children if any exist
+    Term::whereParent($id)->delete();
+
+    // Delete Term
     Term::destroy($id);
 
     return Response::make('OK', 200);

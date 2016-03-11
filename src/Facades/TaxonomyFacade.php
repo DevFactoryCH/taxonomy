@@ -9,6 +9,8 @@ class TaxonomyFacade extends Facade {
    *
    * @return string
    */
-  protected static function getFacadeAccessor() { return 'taxonomy'; }
+  protected static function getFacadeAccessor() {
+    return 'taxonomy';
+  }
 
 }
