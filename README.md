@@ -87,6 +87,13 @@ class Car extends \Eloquent {
 
 ## Usage
 
+Taxonomy base class  
+```
+use Devfactory\Taxonomy\Models\Term;
+use Devfactory\Taxonomy\Models\TermRelation;
+use Devfactory\Taxonomy\Models\Vocabulary;
+``` 
+
 Creating a vocabulary:
 
 ```php
@@ -119,10 +126,42 @@ You can also optionally specify a parent term and a weight for each, so you can 
 $german_cars = Taxonomy::createTerm($vocabulary->id, 'German Cars');
 $italian_cars = Taxonomy::createTerm($vocabulary->id, 'Italian Cars');
 
+// Using parent
 $term_audi = Taxonomy::CreateTerm($vocabulary->id, 'Audi', $german_cars->id, 0);
 $term_bmw  = Taxonomy::CreateTerm($vocabulary->id, 'BMW', $german_cars->id, 1);
 $term_benz = Taxonomy::CreateTerm($vocabulary->id, 'Mercedes-Benz', $german_cars->id, 2);
 $term_ferrari = Taxonomy::CreateTerm($vocabulary->id, 'Ferrari', $italian_cars->id, 0);
+
+// Set Description
+Taxonomy::CreateTerm($vocabulary->id, 
+	[ 
+		'name' => 'Toyota',
+		'description'=>'Some description',
+		'parent'=>$parent_id,
+		'weight'=>$weight,
+
+	]);
+
+```
+
+Retrieve all term from vocabulary
+```
+$terms = Taxonomy::getVocabularyByNameAsArray('Cars');
+
+// Get a Vocabulary by name as an options array for dropdowns
+$terms = Taxonomy::getVocabularyByNameOptionsArray('Cars');
+```
+
+Retrive term from vocabulary
+```
+// $term = Taxonomy::getTermByName($vocabulary,$term_name);
+
+$vocabulary = Taxonomy::getVocabularyByName('Cars');
+$term = Taxonomy::getTermByName($vocabulary,'German Cars');
+
+// $term = Taxonomy::getTermByName($vocabulary_id,$term_name); 
+
+$term = Taxonomy::getTermByName($vocabulary->id,'German Cars');
 ```
 
 With the Car Model, I can create a new instance and assign it a term for the make it belongs to:

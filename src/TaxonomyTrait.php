@@ -6,13 +6,13 @@ use Devfactory\Taxonomy\Models\Term;
 trait TaxonomyTrait {
 
   /**
-	 * Return collection of tags related to the tagged model
-	 *
-	 * @return Illuminate\Database\Eloquent\Collection
-	 */
-	public function related() {
-		return $this->morphMany('Devfactory\Taxonomy\Models\TermRelation', 'relationable');
-	}
+   * Return collection of tags related to the tagged model
+   *
+   * @return Illuminate\Database\Eloquent\Collection
+   */
+  public function related() {
+    return $this->morphMany('Devfactory\Taxonomy\Models\TermRelation', 'relationable');
+  }
 
   /**
    * Add an existing term to the inheriting model
@@ -23,16 +23,33 @@ trait TaxonomyTrait {
    * @return object
    *  The TermRelation object
    */
-  public function addTerm($term_id) {
+  public function addTerm($term_id,$description="") {
     $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
 
     $term_relation = [
       'term_id' => $term->id,
       'vocabulary_id' => $term->vocabulary_id,
+      'description' => $description,
     ];
 
     $this->related()->save(new TermRelation($term_relation));
   }
+
+  /**
+   * Update an existing term to the inheriting model
+   *
+   * @param $term_id int
+   *  The ID of the term or an instance of the Term object   
+   *
+   * @return object
+   *  The TermRelation object
+   */
+  public function updateTerm($term_id,$description="") {
+    $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
+
+    $this->related()->update(['description' => $description])->where(['term_id' => $term->id]);
+  }
+
 
   /**
    * Check if the Model instance has the passed term as an existing relation

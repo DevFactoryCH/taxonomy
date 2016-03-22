@@ -30,8 +30,8 @@ class Taxonomy {
       throw new Exceptions\VocabularyExistsException();
     }
 
-		return $this->vocabulary->create(['name' => $name]);
-	}
+    return $this->vocabulary->create(['name' => $name]);
+  }
 
   /**
    * Get a Vocabulary by ID
@@ -57,6 +57,24 @@ class Taxonomy {
    */
   public function getVocabularyByName($name) {
     return $this->vocabulary->where('name', $name)->first();
+  }
+
+  /**
+   * Get a Vocabulary by name
+   *
+   * @param string $name
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getTermByName( $vocabulary, $name ) {
+
+    if( $vocabulary instanceof \Devfactory\Taxonomy\Models\Vocabulary )
+      $vocabulary = $vocabulary->id;
+
+
+    return $this->term->where( 'vocabulary_id', $vocabulary )->where( 'name', $name )->first();
   }
 
   /**
@@ -185,15 +203,20 @@ class Taxonomy {
    *
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
-  public function createTerm($vid, $name, $parent = 0, $weight = 0) {
+  public function createTerm($vid, $term, $parent = 0, $weight = 0) {
     $vocabulary = $this->vocabulary->findOrFail($vid);
 
-    $term = [
-      'name' => $name,
-      'vocabulary_id' => $vid,
-      'parent' => $parent,
-      'weight' => $weight,
-    ];
+    if( !is_array($term) ) 
+    {
+      $term = [
+        'name' => $name,
+        'parent' => $parent,
+        'weight' => $weight,
+      ];
+
+    }
+
+    $term['vocabulary_id'] = $vid;
 
     return $this->term->create($term);
   }
