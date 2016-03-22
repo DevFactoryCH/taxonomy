@@ -164,14 +164,6 @@ $term = Taxonomy::getTermByName($vocabulary,'German Cars');
 $term = Taxonomy::getTermByName($vocabulary->id,'German Cars');
 ```
 
-Retrieve all term from category
-```
-$terms = Taxonomy::getVocabularyByNameAsArray('Cars');
-
-// Get a Vocabulary by name as an options array for dropdowns
-$terms = Taxonomy::getVocabularyByNameOptionsArray('Cars');
-```
-
 With the Car Model, I can create a new instance and assign it a term for the make it belongs to:
 
 ```php
