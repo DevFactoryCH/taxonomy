@@ -5,16 +5,17 @@ class TermRelation extends \Eloquent {
   protected $fillable = [
     'term_id',
     'vocabulary_id',
+    'description'
   ];
 
-	protected $table = 'term_relations';
+  protected $table = 'term_relations';
 
   public function relationable() {
     return $this->morphTo();
   }
 
-	public function term() {
-		return $this->belongsTo('Devfactory\Taxonomy\Models\Term');
-	}
+  public function term() {
+    return $this->belongsTo('Devfactory\Taxonomy\Models\Term');
+  }
 
 }

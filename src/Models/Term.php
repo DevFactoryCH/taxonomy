@@ -7,19 +7,20 @@ class Term extends \Eloquent {
     'vocabulary_id',
     'parent',
     'weight',
+    'description'
   ];
 
-	public static $rules = [
-		'name' => 'required'
+  public static $rules = [
+    'name' => 'required'
   ];
 
   public function termRelation() {
-    return $this->morphMany('Devfactory\Taxonomy\Models\TermRelation', 'relationable');
+    return $this->morphMany('TermRelation', 'relationable');
   }
 
-	public function vocabulary() {
-		return $this->belongsTo('Devfactory\Taxonomy\Models\Vocabulary');
-	}
+  public function vocabulary() {
+    return $this->belongsTo('Devfactory\Taxonomy\Models\Vocabulary');
+  }
 
   public function childrens() {
     return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent', 'id')
