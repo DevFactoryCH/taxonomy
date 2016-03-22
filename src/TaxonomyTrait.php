@@ -47,7 +47,10 @@ trait TaxonomyTrait {
   public function updateTerm($term_id,$description="") {
     $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
 
-    $this->related()->update(['description' => $description])->where(['term_id' => $term->id]);
+    if( !$this->related() )
+      return;
+
+    $this->related()->update(['description' => $description]);
   }
 
 
