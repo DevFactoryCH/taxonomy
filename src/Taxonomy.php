@@ -71,10 +71,22 @@ class Taxonomy {
   public function getTermByName( $vocabulary, $name ) {
 
     if( $vocabulary instanceof \Devfactory\Taxonomy\Models\Vocabulary )
-      $vocabulary = $vocabulary->id;
+      $vocabulary_id = $vocabulary->id;
+
+    if( is_string( $vocabulary ) )
+    {
+
+      $vocabulary = $this->getVocabularyByName( $vocabulary );
+
+      if( !$vocabulary )
+        return false;
+    
+      $vocabulary_id = $vocabulary->id;
+
+    }
 
 
-    return $this->term->where( 'vocabulary_id', $vocabulary )->where( 'name', $name )->first();
+    return $this->term->where( 'vocabulary_id', $vocabulary_id )->where( 'name', $name )->first();
   }
 
   /**
