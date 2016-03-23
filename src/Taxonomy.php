@@ -86,11 +86,30 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getVocabularyByNameAsArray($name) {
-    $vocabulary = $this->vocabulary->where('name', $name)->first();
+  public function getTermsByNameAsArray( $vocabulary_name , $field='name' ) {
+    $vocabulary = $this->vocabulary->where('name', $vocabulary_name)->first();
 
     if (!is_null($vocabulary)) {
       return $vocabulary->terms->lists('name', 'id')->toArray();
+    }
+
+    return [];
+  }
+
+  /**
+   * Get a Vocabulary by name
+   *
+   * @param string $name
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getTermsByName( $vocabulary_name  ) {
+    $vocabulary = $this->vocabulary->where('name', $vocabulary_name)->first();
+
+    if (!is_null($vocabulary)) {
+      return $vocabulary->terms;
     }
 
     return [];
