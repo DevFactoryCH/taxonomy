@@ -15,7 +15,7 @@ trait TaxonomyTrait {
   }
 
   /**
-   * Add an existing term to the inheriting model
+   * Add an existing term to the inheriting model (Many to Many )
    *
    * @param $term_id int
    *  The ID of the term or an instance of the Term object
@@ -24,7 +24,11 @@ trait TaxonomyTrait {
    *  The TermRelation object
    */
   public function addTerm($term_id,$description="") {
+    
     $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
+
+    if(!$term)
+      return;
 
     $term_relation = [
       'term_id' => $term->id,
@@ -33,6 +37,28 @@ trait TaxonomyTrait {
     ];
 
     $this->related()->save(new TermRelation($term_relation));
+  }
+
+  /**
+   * Set term to the inheriting model ( One to many )
+   *
+   * @param $term_id int
+   *  The ID of the term or an instance of the Term object
+   *
+   * @return object
+   *  The TermRelation object
+   */
+  public function setTerm($term_id,$description="") {
+
+    $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
+
+    if(!$term)
+      return;
+
+    // Remove all term from same vocabulary
+    $this->related()->where('vocabulary_id',$term->vocabulary_id)->delete();
+
+    $this->addTerm($term_id,$description);
   }
 
   /**
@@ -47,10 +73,13 @@ trait TaxonomyTrait {
   public function updateTerm($term_id,$description="") {
     $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
 
+    if(!$term)
+      return;
+
     if( !$this->related() )
       return;
 
-    $this->related()->update(['description' => $description]);
+    $this->related()->where('term_id',$term_id)->update(['description' => $description]);
   }
 
 
@@ -87,7 +116,31 @@ trait TaxonomyTrait {
   public function getTermsByVocabularyName($name) {
     $vocabulary = \Taxonomy::getVocabularyByName($name);
 
-    return $this->related()->where('vocabulary_id', $vocabulary->id)->get();
+    if(!$vocabulary)
+      return [];
+
+    return  $this->related()->where('term_relations.vocabulary_id', $vocabulary->id)->get();
+  }  
+
+  /**
+   * Get all the terms for a given vocabulary that are linked to the current
+   * Model.
+   *
+   * @param $name string
+   *  The name of the vocabulary
+   *
+   * @return object
+   *  A collection of TermRelation objects
+   */
+  public function getTermByVocabularyName($name) {
+
+    $vocabulary = \Taxonomy::getVocabularyByName($name);
+
+    if(!$vocabulary)
+      return [];
+
+    return $this->related()->where('vocabulary_id', $vocabulary->id)->first();
+
   }
 
   /**
@@ -133,7 +186,16 @@ trait TaxonomyTrait {
    * @return bool
    *  TRUE if the term relation has been deleted, otherwise FALSE
    */
-  public function removeAllTerms() {
+  public function removeAllTerms($vocabulary_name=false) {
+
+
+    if($vocabulary_name)
+    {
+      $vocabulary = \Taxonomy::getVocabularyByName($name);
+      
+      return $this->related()->where('vocabulary_id',$vocabulary->id)->delete();
+    }
+
     return $this->related()->delete();
   }
 

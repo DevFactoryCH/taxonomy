@@ -9,7 +9,8 @@ class Taxonomy {
   protected $term;
   protected $term_relation;
 
-  public function __construct(Vocabulary $vocabulary, Term $term) {
+  public function __construct(Vocabulary $vocabulary, Term $term) 
+  {
     // Inject required Models
     $this->vocabulary = $vocabulary;
     $this->term = $term;
@@ -25,8 +26,10 @@ class Taxonomy {
    *  The Vocabulary object if created, FALSE if error creating,
    *  Exception if the vocabulary name already exists.
    */
-  public function createVocabulary($name) {
-    if ($this->vocabulary->where('name', $name)->count()) {
+  public function createVocabulary($name) 
+  {
+    if ($this->vocabulary->where('name', $name)->count()) 
+    {
       throw new Exceptions\VocabularyExistsException();
     }
 
@@ -42,7 +45,8 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getVocabulary($id) {
+  public function getVocabulary($id) 
+  {
     return $this->vocabulary->find($id);
   }
 
@@ -55,7 +59,8 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getVocabularyByName($name) {
+  public function getVocabularyByName($name) 
+  {
     return $this->vocabulary->where('name', $name)->first();
   }
 
@@ -68,7 +73,8 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getTermByName( $vocabulary, $name ) {
+  public function getTermByName( $vocabulary, $name ) 
+  {
 
     if( $vocabulary instanceof \Devfactory\Taxonomy\Models\Vocabulary )
       $vocabulary_id = $vocabulary->id;
@@ -98,7 +104,8 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getTermsByNameAsArray( $vocabulary_name , $field='name' ) {
+  public function getTermsByNameAsArray( $vocabulary_name , $field='name' ) 
+  {
     $vocabulary = $this->vocabulary->where('name', $vocabulary_name)->first();
 
     if (!is_null($vocabulary)) {
@@ -117,7 +124,8 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getTermsByName( $vocabulary_name  ) {
+  public function getTermsByName( $vocabulary_name  ) 
+  {
     $vocabulary = $this->vocabulary->where('name', $vocabulary_name)->first();
 
     if (!is_null($vocabulary)) {
@@ -136,7 +144,8 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getVocabularyByNameOptionsArray($name) {
+  public function getVocabularyByNameOptionsArray($name) 
+  {
     $vocabulary = $this->vocabulary->where('name', $name)->first();
 
     if (is_null($vocabulary)) {
@@ -166,7 +175,8 @@ class Taxonomy {
    *
    * @return array
    */
-  private function recurse_children($parent, &$options, $depth = 1) {
+  private function recurse_children($parent, &$options, $depth = 1) 
+  {
     $parent->childrens->map(function($child) use (&$options, $depth) {
       $options[$child->id] = str_repeat('-', $depth) .' '. $child->name;
 
@@ -204,7 +214,8 @@ class Taxonomy {
    *
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
-  public function deleteVocabularyByName($name) {
+  public function deleteVocabularyByName($name) 
+  {
     $vocabulary = $this->vocabulary->where('name', $name)->first();
 
     if (!is_null($vocabulary)) {
@@ -234,20 +245,13 @@ class Taxonomy {
    *
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
-  public function createTerm($vid, $term, $parent = 0, $weight = 0) {
+  public function createTerm($vid, $term = array() ) 
+  {
     $vocabulary = $this->vocabulary->findOrFail($vid);
 
-    if( !is_array($term) ) 
-    {
-      $term = [
-        'name' => $name,
-        'parent' => $parent,
-        'weight' => $weight,
-      ];
-
-    }
-
     $term['vocabulary_id'] = $vid;
+    $term['parent'] = isset($term['parent']) ? $term['parent'] : 0  ;
+    $term['weight'] = isset($term['weight']) ? $term['weight'] : 0  ;
 
     return $this->term->create($term);
   }
