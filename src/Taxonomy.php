@@ -3,6 +3,7 @@
 use Devfactory\Taxonomy\Models\Vocabulary;
 use Devfactory\Taxonomy\Models\Term;
 
+
 class Taxonomy {
 
   protected $vocabulary;
@@ -207,33 +208,22 @@ class Taxonomy {
    *
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
-  public function deleteVocabulary($id) {
-    $vocabulary = $this->vocabulary->findOrFail($id);
+  public function deleteVocabulary($vocabulary) {
 
-    return $vocabulary->delete();
-  }
+    if( is_string( $vocabulary ) )
+    {
 
-  /**
-   * Delete a Vocabulary by ID
-   *
-   * @param int $id
-   *  The ID of the Vocabulary to delete
-   *
-   * @return bool
-   *  TRUE if Vocabulary is deletes, otherwise FALSE
-   *
-   * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
-   */
-  public function deleteVocabularyByName($name) 
-  {
-    $vocabulary = $this->vocabulary->where('name', $name)->first();
+      $vocabulary = $this->getVocabularyByName( $vocabulary );
 
-    if (!is_null($vocabulary)) {
+      if( !$vocabulary )
+        return false;
+    
       return $vocabulary->delete();
     }
 
-    return FALSE;
+    return false;
   }
+
 
   /**
    * Create a new term in a specific vocabulary

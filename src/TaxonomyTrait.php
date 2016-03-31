@@ -2,6 +2,8 @@
 
 use Devfactory\Taxonomy\Models\TermRelation;
 use Devfactory\Taxonomy\Models\Term;
+use Devfactory\Taxonomy\Models\Vocabulary;
+use Devfactory\Taxonomy;
 
 trait TaxonomyTrait {
 
@@ -102,15 +104,15 @@ trait TaxonomyTrait {
    * @return object
    *  The TermRelation object
    */
-  public function hasTerm($term_id) {
-    $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
+  public function hasTerm($term) {
 
-    $term_relation = [
-      'term_id' => $term->id,
-      'vocabulary_id' => $term->vocabulary_id,
-    ];
+    $term = ($term instanceof Term) ? $term : Term::findOrFail($term);
 
-    return ($this->related()->where('term_id', $term_id)->count()) ? TRUE : FALSE;
+    if(!$term)
+      return false;
+    }
+
+    return ($this->related()->where('term_id', $term->id )->count()) ? TRUE : FALSE;
   }
 
   /**
@@ -123,11 +125,12 @@ trait TaxonomyTrait {
    * @return object
    *  A collection of TermRelation objects
    */
-  public function getTermsByVocabularyName($name) {
-    $vocabulary = \Taxonomy::getVocabularyByName($name);
+  public function getTerms($vocabulary) {
+
+    $vocabulary = ($vocabulary instanceof Vocabulary) ? $vocabulary : Vocabulary::findOrFail($vocabulary);
 
     if(!$vocabulary)
-      return [];
+      return;
 
     return  $this->related()->where('term_relations.vocabulary_id', $vocabulary->id)->get();
   }  
@@ -142,39 +145,16 @@ trait TaxonomyTrait {
    * @return object
    *  A collection of TermRelation objects
    */
-  public function getTermByVocabularyName($name) {
+  public function getTerm($name) {
 
-    $vocabulary = \Taxonomy::getVocabularyByName($name);
+    $vocabulary = ($vocabulary instanceof Vocabulary) ? $vocabulary : Vocabulary::findOrFail($vocabulary);
 
     if(!$vocabulary)
-      return [];
+      return;
 
-    return $this->related()->where('vocabulary_id', $vocabulary->id)->first();
-
+    return  $this->related()->where('term_relations.vocabulary_id', $vocabulary->id)->first();
   }
 
-  /**
-   * Get all the terms for a given vocabulary that are linked to the current
-   * Model as a key value pair array.
-   *
-   * @param $name string
-   *  The name of the vocabulary
-   *
-   * @return array
-   *  A key value pair array of the type 'id' => 'name'
-   */
-  public function getTermsByVocabularyNameAsArray($name) {
-    $vocabulary = \Taxonomy::getVocabularyByName($name);
-
-    $term_relations = $this->related()->where('vocabulary_id', $vocabulary->id)->get();
-
-    $data = [];
-    foreach ($term_relations as $term_relation) {
-      $data[$term_relation->term->id] = $term_relation->term->name;
-    }
-
-    return $data;
-  }
 
   /**
    * Unlink the given term with the current model object
@@ -185,8 +165,9 @@ trait TaxonomyTrait {
    * @return bool
    *  TRUE if the term relation has been deleted, otherwise FALSE
    */
-  public function removeTerm($term_id) {
-    $term_id = ($term_id instanceof Term) ? $term_id->id : $term_id;
+  public function removeTerm($term) {
+    $term_id = ($term instanceof Term) ? $term->id : $term;
+
     return $this->related()->where('term_id', $term_id)->delete();
   }
 
@@ -196,17 +177,19 @@ trait TaxonomyTrait {
    * @return bool
    *  TRUE if the term relation has been deleted, otherwise FALSE
    */
-  public function removeAllTerms($vocabulary_name=false) {
+  public function removeTerms($vocabulary=false) {
 
+    if!($vocabulary)
+      return $this->related()->delete();
 
-    if($vocabulary_name)
-    {
-      $vocabulary = \Taxonomy::getVocabularyByName($name);
-      
-      return $this->related()->where('vocabulary_id',$vocabulary->id)->delete();
+    $vocabulary = ($vocabulary instanceof Vocabulary) ? $vocabulary : Vocabulary::findOrFail($vocabulary);
+
+    if(!$vocabulary)
+      return false;
     }
 
-    return $this->related()->delete();
+    return $this->related()->where('vocabulary_id', $vocabulary->id )->delete();
+
   }
 
   /**
@@ -217,7 +200,26 @@ trait TaxonomyTrait {
    *
    * @return void
    */
-  public function scopeGetAllByTermId($query, $term_id) {
+  public function scopeWhereHasTerm($query, $term_id) {
+    return $query->whereHas('related', function($q) use($term_id) {
+      if (is_array($term_id)) {
+        $q->whereIn('term_id', $term_id);
+      }
+      else {
+        $q->where('term_id', '=', $term_id);
+      }
+    });
+  }  
+
+  /**
+   * Filter the model to return a subset of entries matching the term ID
+   *
+   * @param object $query
+   * @param int $term_id
+   *
+   * @return void
+   */
+  public function scopeWhereHasVocabulary($query, $term_id) {
     return $query->whereHas('related', function($q) use($term_id) {
       if (is_array($term_id)) {
         $q->whereIn('term_id', $term_id);
