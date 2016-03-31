@@ -124,21 +124,19 @@ List of term :
 
 #### Vocabulary 
 
+**Create vocabulary**
 ```php
 Taxonomy::createVocabulary('Region');
 ```
 
-**Retrieving a vocabulary**
-
+**Retrieve vocabulary**
 ```php
 $vocabulary = Taxonomy::getVocabulary(1);             // Using ID
 $vocabulary = Taxonomy::getVocabularyByName('Region');  // Using Name
 ```
 
-**Deleting a vocabulary**
-
+**Delete a vocabulary**
 ```php
-
 $vocabulary->delete(); // Using Eloquent delete
 Taxonomy::deleteVocabulary('Region');  // Using Name
 ```
@@ -166,19 +164,17 @@ $termIndonesia = Taxonomy::createTerm($vocabulary->id, [
 ```
 
 **Retrive single term**
-```
-
+```php
 // Retrive term `Asia` from Vocabulary `Region`
 $term = Taxonomy::getTerm('Region', 'Asia')
 
 // Other method 
 $vocabularyRegion = Taxonomy::getVocabularyByName('Region'); 
 $term = Taxonomy::getTerm($vocabularyRegion , 'Asia')
-
 ```
 
 **Retrive all terms from vocabulary**
-```
+```php
 /* Using Taxonomy Helper*/
 
 // Get term with child
@@ -198,7 +194,6 @@ $terms = $vocabularyRegion->terms();
 
 // Get term without child
 $terms = $vocabularyRegion->terms()->where('parent_id',0)->get()
-
 ```
 
 #### Working with Model
@@ -206,7 +201,7 @@ $terms = $vocabularyRegion->terms()->where('parent_id',0)->get()
 Make sure your model is already using `\Devfactory\Taxonomy\TaxonomyTrait`
 
 **Assign one to many relationship**
-```
+```php
 $car = \Car::findOrFail(1);
 
 $term = Taxonomy::getTerm('Region', 'Asia');
@@ -220,7 +215,7 @@ $car->setTerm(1)
 ```
 
 **Assign many to many relationship**
-```
+```php
 $car = \Car::findOrFail(1);
 
 $car->addTerm(Taxonomy::getTerm('Region', 'Asia'));
@@ -231,7 +226,7 @@ $car->addTerm(1);
 ```
 
 **Check if a model has a term**
-```
+```php
 $car = \Car::findOrFail(1);
 
 $term = Taxonomy::getTerm('Region', 'Asia');
@@ -244,7 +239,7 @@ $car->hasTerm(1);
 ```
 
 **Get term(s) from model**
-```
+```php
 $car = \Car::findOrFail(1);
 
 // using Vocabulary id
@@ -257,7 +252,7 @@ $terms = $car->getTerms('Asia');
 ```
 
 **Remove term from model**
-```
+```php
 $car = \Car::findOrFail(1);
 
 $term = Taxonomy::getTerm('Region', 'Asia');
@@ -272,7 +267,7 @@ $car->removeTerms();
 ```
 
 **Remove all terms from model**
-```
+```php
 $car = \Car::findOrFail(1);
 
 // REMOVE ALL TERMS FROM ALL VOCABULARY
@@ -280,7 +275,7 @@ $car->removeTerms();
 ```
 
 **Remove all terms from specific vocabulary from model**
-```
+```php
 $car = \Car::findOrFail(1);
 
 // Remove all term with vocabulary id = 1
@@ -291,17 +286,17 @@ $vocabularyRegion = Taxonomy::getVocabularyByName('Region');
 $car->removeTerms($vocabularyRegion);
 ```
 
-#### Running Query Againts Model
+#### Running Query against Model
 
 **Get all model which belong to certain vocabulary**
-```
+```php
 $vocabularyRegion = Taxonomy::getVocabularyByName('Region')->list('id');
 
 $cars = Car::whereHasVocabulary($vocabularyRegion)->get();
 ```
 
 **Get all model which belong to certain term(s)**
-```
+```php
 $terms = Taxonomy::getTerms('Region')->list('id');
 
 $cars = Car::whereHasTerm($terms)->get();
