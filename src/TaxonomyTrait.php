@@ -15,6 +15,36 @@ trait TaxonomyTrait {
   }
 
   /**
+   * Set term to the inheriting model ( One to many )
+   *
+   * @param $term_id int
+   *  The ID of the term or an instance of the Term object
+   *
+   * @return object
+   *  The TermRelation object
+   */
+  public function setTerm($term, $description="") {
+
+    $term = ($term instanceof Term) ? $term : Term::findOrFail($term);
+
+    if(!$term)
+      return;
+
+    // Check if the new term is already there
+    $related = $this->related()->first();
+
+    if( $related && $related->term->id == $term->id )
+    {
+      return $this->updateTerm($term, $description);
+    }
+
+    // Remove all term from same vocabulary
+    $this->related()->where('relationable_id', $this->id)->delete();
+
+    return $this->addTerm($term->id,$description);
+  }
+
+  /**
    * Add an existing term to the inheriting model (Many to Many )
    *
    * @param $term_id int
@@ -23,9 +53,9 @@ trait TaxonomyTrait {
    * @return object
    *  The TermRelation object
    */
-  public function addTerm($term_id,$description="") {
+  public function addTerm($term, $description="") {
     
-    $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
+    $term = ($term instanceof Term) ? $term : Term::findOrFail($term);
 
     if(!$term)
       return;
@@ -36,30 +66,10 @@ trait TaxonomyTrait {
       'description' => $description,
     ];
 
-    $this->related()->save(new TermRelation($term_relation));
+    return $this->related()->save(new TermRelation($term_relation));
   }
 
-  /**
-   * Set term to the inheriting model ( One to many )
-   *
-   * @param $term_id int
-   *  The ID of the term or an instance of the Term object
-   *
-   * @return object
-   *  The TermRelation object
-   */
-  public function setTerm($term_id,$description="") {
 
-    $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
-
-    if(!$term)
-      return;
-
-    // Remove all term from same vocabulary
-    $this->related()->where('vocabulary_id',$term->vocabulary_id)->delete();
-
-    $this->addTerm($term_id,$description);
-  }
 
   /**
    * Update an existing term to the inheriting model
@@ -70,8 +80,8 @@ trait TaxonomyTrait {
    * @return object
    *  The TermRelation object
    */
-  public function updateTerm($term_id,$description="") {
-    $term = ($term_id instanceof Term) ? $term_id : Term::findOrFail($term_id);
+  public function updateTerm($term,$description="") {
+    $term = ($term instanceof Term) ? $term : Term::findOrFail($term);
 
     if(!$term)
       return;
@@ -79,7 +89,7 @@ trait TaxonomyTrait {
     if( !$this->related() )
       return;
 
-    $this->related()->where('term_id',$term_id)->update(['description' => $description]);
+    $this->related()->where('term_id',$term->id)->update(['description' => $description]);
   }
 
 

@@ -5,7 +5,7 @@ class Term extends \Eloquent {
   protected $fillable = [
     'name',
     'vocabulary_id',
-    'parent',
+    'parent_id',
     'weight',
     'description'
   ];
@@ -23,11 +23,11 @@ class Term extends \Eloquent {
   }
 
   public function childrens() {
-    return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent', 'id')
+    return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent_id', 'id')
       ->orderBy('weight', 'ASC');
   }
 
   public function parentTerm() {
-    return $this->hasOne('Devfactory\Taxonomy\Models\Term', 'id', 'parent');
+    return $this->hasOne('Devfactory\Taxonomy\Models\Term', 'id', 'parent_id');
   }
 }

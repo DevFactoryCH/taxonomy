@@ -73,7 +73,7 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getTermByName( $vocabulary, $name ) 
+  public function getTerm( $vocabulary, $name ) 
   {
 
     if( $vocabulary instanceof \Devfactory\Taxonomy\Models\Vocabulary )
@@ -124,15 +124,25 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getTermsByName( $vocabulary_name  ) 
+  public function getTerms($vocabulary, $includeChild = true) 
   {
-    $vocabulary = $this->vocabulary->where('name', $vocabulary_name)->first();
-
-    if (!is_null($vocabulary)) {
+    if( $vocabulary instanceof \Devfactory\Taxonomy\Models\Vocabulary )
       return $vocabulary->terms;
-    }
 
-    return [];
+    if( is_string( $vocabulary ) )
+    {
+
+      $vocabulary = $this->getVocabularyByName( $vocabulary );
+
+      if( !$vocabulary )
+        return [];
+
+      if($includeChild)
+        return $vocabulary->terms;
+    
+      return $vocabulary->terms()->where($this->term->getTable().'.parent_id',0)->get();
+
+    }
   }
 
   /**
@@ -245,13 +255,29 @@ class Taxonomy {
    *
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
-  public function createTerm($vid, $term = array() ) 
+  public function createTerm($vocabulary_name, $term = array() ) 
   {
-    $vocabulary = $this->vocabulary->findOrFail($vid);
+    $vocabulary = $this->vocabulary->where('name', $vocabulary_name)->first();
 
-    $term['vocabulary_id'] = $vid;
-    $term['parent'] = isset($term['parent']) ? $term['parent'] : 0  ;
+    if(!$vocabulary)
+    {
+      throw new Exceptions\VocabularyNotExistsException();
+    }
+
+
+    // if($this->vocabulary->terms)
+
+    $term['vocabulary_id'] = $vocabulary->id;
+    $term['parent_id'] = isset($term['parent_id']) ? $term['parent_id'] : 0  ;
     $term['weight'] = isset($term['weight']) ? $term['weight'] : 0  ;
+
+    if($vocabulary->terms()
+        ->where($this->term->getTable().'.parent_id', $term['parent_id'])
+        ->where($this->term->getTable().'.name', $term['name'])
+        ->first())
+    {
+      throw new Exceptions\TermExistsException();
+    }
 
     return $this->term->create($term);
   }

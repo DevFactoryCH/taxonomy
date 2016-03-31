@@ -12,10 +12,10 @@ This package allows you to create vocabularies with terms in Laravel 4 and 5
 ### Laravel 5
 
 In your `composer.json` add:
-
-	"require": {
-		"devfactory/taxonomy": "3.0.*"
-	}
+m
+    "require": {
+        "devfactory/taxonomy": "3.0.*"
+    }
 
 From the terminal run
 
@@ -31,11 +31,11 @@ Then register the service provider and Facade by opening `app/config/app.php`
 
 Then run the following artisant command to publish the config and migrations:
 
-	php artisan vendor:publish
+    php artisan vendor:publish
 
 Then run the migrations:
 
-	php artisan migrate
+    php artisan migrate
 
 And finally in any of the Models where you want to use the Taxonomy functionality, add the following trait:
 
@@ -51,9 +51,9 @@ class Car extends \Eloquent {
 
 In your `composer.json` add:
 
-	"require": {
-		"devfactory/taxonomy": "2.0.*"
-	}
+    "require": {
+        "devfactory/taxonomy": "2.0.*"
+    }
 
 From the terminal run
 
@@ -87,106 +87,140 @@ class Car extends \Eloquent {
 
 ## Usage
 
-Taxonomy base class  
+Use Taxonomy base class  
 ```
 use Devfactory\Taxonomy\Models\Term;
 use Devfactory\Taxonomy\Models\TermRelation;
 use Devfactory\Taxonomy\Models\Vocabulary;
 ``` 
 
-Creating a vocabulary:
+### Taxonomy
+`Taxonomy` is the grouping mechanism between model/object. Each group is of `taxonomy` is called `vocabulary` .The name of different group between one `vocabulary` is called `term`. The `term` can have also have parrent-child relationship. 
+
+This goal of this package is to make create and organizing multiple taxonomy as easy as possible
+
+Sample :
+
+**Region Vocabulary**
+
+List of term : 
+
+- Asia
+    - Indonesia
+    - Singapore
+- Europe
+    - France
+    - Germany
+- North America 
+    - Canada
+    - United States of America
+- Australia
+    - Australia
+    - New Zealand
+- Africa
+    - Egypt
+    - Marocco
+
+
+#### Vocabulary 
 
 ```php
-Taxonomy::createVocabulary('Cars');
+Taxonomy::createVocabulary('Region');
 ```
 
-Retrieving a Vocabulary:
+**Retrieving a vocabulary**
 
 ```php
 $vocabulary = Taxonomy::getVocabulary(1);             // Using ID
-$vocabulary = Taxonomy::getVocabularyByName('Cars');  // Using Name
+$vocabulary = Taxonomy::getVocabularyByName('Region');  // Using Name
 ```
 
-Deleting a Vocabulary:
+**Deleting a vocabulary**
 
 ```php
 Taxonomy::deleteVocabulary(1);             // Using ID
-Taxonomy::deleteVocabularyByName('Cars');  // Using Name
+Taxonomy::deleteVocabularyByName('Region');  // Using Name
 ```
 
-Adding a Term to a vocabulary:
+#### Term
+
+**Adding a term to a vocabulary**
 
 ```php
-Taxonomy::createTerm($vocabulary->id, 'Audi');
+$vocabulary = Taxonomy::getVocabularyByName('Region'); 
+
+$termAsia = Taxonomy::createTerm($vocabulary->id, [ 
+        'name' => 'Asia',
+        'description'=>'Some description ',
+        'parent_id'=>0 , // optional param, set 0 if it has not parrent 
+        'weight'=>0, // optional param, the term can be retrieved later and sort by its weight
+
+    ]);
+
+$termIndonesia = Taxonomy::createTerm($vocabulary->id, [ 
+        'name' => 'Indonesia',
+        'description'=>'Some description',
+        'parent_id'=>$termAsia->id, 
+
+    ]);
 ```
 
-You can also optionally specify a parent term and a weight for each, so you can group them together and keep them sorted:
 
-```php
-$german_cars = Taxonomy::createTerm($vocabulary->id, 'German Cars');
-$italian_cars = Taxonomy::createTerm($vocabulary->id, 'Italian Cars');
+**Retrive single term**
+```
 
-// Using parent
-$term_audi = Taxonomy::CreateTerm($vocabulary->id, 'Audi', $german_cars->id, 0);
-$term_bmw  = Taxonomy::CreateTerm($vocabulary->id, 'BMW', $german_cars->id, 1);
-$term_benz = Taxonomy::CreateTerm($vocabulary->id, 'Mercedes-Benz', $german_cars->id, 2);
-$term_ferrari = Taxonomy::CreateTerm($vocabulary->id, 'Ferrari', $italian_cars->id, 0);
+// Retrive term `Asia` from Vocabulary `Region`
+$term = Taxonomy::getTerm('Region', 'Asia')
 
-// Set Description
-Taxonomy::CreateTerm($vocabulary->id, 
-	[ 
-		'name' => 'Toyota',
-		'description'=>'Some description',
-		'parent'=>$parent_id,
-		'weight'=>$weight,
-
-	]);
+// Other method 
+$vocabularyRegion = Taxonomy::getVocabularyByName('Region'); 
+$term = Taxonomy::getTerm($vocabularyRegion , 'Asia')
 
 ```
 
-Retrieve all term from vocabulary
+**Retrive all terms from vocabulary**
 ```
-$terms = Taxonomy::getVocabularyByNameAsArray('Cars');
+/* Using Taxonomy Helper*/
 
-// Get a Vocabulary by name as an options array for dropdowns
-$terms = Taxonomy::getVocabularyByNameOptionsArray('Cars');
-```
+// Get term with child
+$terms = Taxonomy::getTerms('Asia');
 
-Retrive term from vocabulary
-```
-// $term = Taxonomy::getTermByName($vocabulary,$term_name);
+// Get term without child
+$terms = Taxonomy::getTerms('Asia',true);
 
-$vocabulary = Taxonomy::getVocabularyByName('Cars');
-$term = Taxonomy::getTermByName($vocabulary,'German Cars');
+/*From vocabulary model itself*/
+$vocabularyRegion = Taxonomy::getVocabularyByName('Region'); 
 
-// $term = Taxonomy::getTermByName($vocabulary_id,$term_name); 
+// Get term with child
+$terms = $vocabularyRegion->terms();
 
-$term = Taxonomy::getTermByName($vocabulary->id,'German Cars');
-```
+// Get term without child
+$terms = $vocabularyRegion->terms()->where('parent_id',0)->get()
 
-With the Car Model, I can create a new instance and assign it a term for the make it belongs to:
-
-```php
-$car = Car::create([
-  'model' => 'A3',
-]);
-
-$car->addTerm($term_bmw->id);
-$car->addTerm($term_benz->id);
-$car->removeAllTerms();              // Remove all terms linked to this car
-
-$car->addTerm($term_ferrari->id);
-$car->removeTerm($term_ferrari-id);  // Remove a specific term
-
-$car->addTerm($term_audi->id);
-
-// Get all the terms from the vocabulary 'Cars' That
-// are attached to this Car.
-$terms = $car->getTermsByVocabularyName('Cars');
 ```
 
-To retrieve all the cars that match a given term:
+#### Working with Model
 
-```php
-$audis = Car::getAllByTermId($term_audi->id)->get();
+
+Make sure your model is already using `\Devfactory\Taxonomy\TaxonomyTrait`
+
+**Assign one to many relationship**
+```
+
+$car = \Car::findOrFail(1);
+
+$term = Taxonomy::getTerm('Region', 'Asia');
+
+$car->setTerm($term)
+
+```
+
+**Assign many to many relationship**
+```
+
+$car = \Car::findOrFail(1);
+
+$car->addTerm(Taxonomy::getTerm('Region', 'Asia'));
+$car->addTerm(Taxonomy::getTerm('Region', 'Europe'));
+
 ```
