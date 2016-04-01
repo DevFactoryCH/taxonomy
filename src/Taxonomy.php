@@ -46,23 +46,16 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getVocabulary($id) 
+  public function getVocabulary($vocabulary) 
   {
-    return $this->vocabulary->find($id);
-  }
-
-  /**
-   * Get a Vocabulary by name
-   *
-   * @param string $name
-   *  The name of the Vocabulary to fetch
-   *
-   * @return
-   *  The Vocabulary Model object, otherwise NULL
-   */
-  public function getVocabularyByName($name) 
-  {
-    return $this->vocabulary->where('name', $name)->first();
+    if($vocabulary instanceof Vocabulary)
+      return $vocabulary;
+    elseif(is_string($vocabulary))
+      return $this->vocabulary->where('name', $vocabulary)->first();
+    elseif(is_numeric($vocabulary))
+      return $this->vocabulary->where('id', $vocabulary)->first();
+    
+    return false;
   }
 
   /**
@@ -77,23 +70,9 @@ class Taxonomy {
   public function getTerm( $vocabulary, $name ) 
   {
 
-    if( $vocabulary instanceof \Devfactory\Taxonomy\Models\Vocabulary )
-      $vocabulary_id = $vocabulary->id;
+    $vocabulary = $this->getVocabulary($vocabulary);
 
-    if( is_string( $vocabulary ) )
-    {
-
-      $vocabulary = $this->getVocabularyByName( $vocabulary );
-
-      if( !$vocabulary )
-        return false;
-    
-      $vocabulary_id = $vocabulary->id;
-
-    }
-
-
-    return $this->term->where( 'vocabulary_id', $vocabulary_id )->where( 'name', $name )->first();
+    return $this->term->where( 'vocabulary_id', $vocabulary->id )->where( 'name', $name )->first();
   }
 
   /**
@@ -105,9 +84,9 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getTermsByNameAsArray( $vocabulary_name , $field='name' ) 
+  public function getTermsByNameAsArray( $vocabulary , $field='name' ) 
   {
-    $vocabulary = $this->vocabulary->where('name', $vocabulary_name)->first();
+    $vocabulary = $this->getVocabulary($vocabulary);
 
     if (!is_null($vocabulary)) {
       return $vocabulary->terms->lists('name', 'id')->toArray();
@@ -127,11 +106,9 @@ class Taxonomy {
    */
   public function getTerms($vocabulary, $parentName = true, $withParent = false) 
   {
-    if( $vocabulary instanceof \Devfactory\Taxonomy\Models\Vocabulary )
-      $vocabulary = $vocabulary;
-    elseif( is_string( $vocabulary ) )
-      $vocabulary = $this->getVocabularyByName( $vocabulary );
-    else 
+    $vocabulary = $this->getVocabulary($vocabulary);
+
+    if(!$vocabulary)
       return collect([]);
 
     if( $parentName === true )
@@ -219,7 +196,7 @@ class Taxonomy {
     if( is_string( $vocabulary ) )
     {
 
-      $vocabulary = $this->getVocabularyByName( $vocabulary );
+      $vocabulary = $this->getVocabulary( $vocabulary );
 
       if( !$vocabulary )
         return false;

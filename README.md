@@ -239,16 +239,23 @@ $car->hasTerm(1);
 ```
 
 **Get term(s) from model**
+
+`getTerm` and `getTerms` will return `TermRelation` Model
+
 ```php
 $car = \Car::findOrFail(1);
 
 // using Vocabulary id
-$term = $car->getTerm(1);
-$terms = $car->getTerms(1);
+$termRelation = $car->getTerm(1);
+$termRelations = $car->getTerms(1);
 
 // using Vocabulary Name
-$term = $car->getTerm('Asia');
-$terms = $car->getTerms('Asia');
+$termRelation = $car->getTerm('Region');
+$termRelations = $car->getTerms('Region');
+
+$term = $termRelation->term;
+$terms = $termRelations->term;
+
 ```
 
 **Remove term from model**
@@ -290,7 +297,7 @@ $car->removeTerms($vocabularyRegion);
 
 **Get all model which belong to certain vocabulary**
 ```php
-$vocabularyRegion = Taxonomy::getVocabularyByName('Region');
+$vocabularyRegion = Taxonomy::getVocabulary('Region');
 
 $cars = Car::whereHasVocabulary($vocabularyRegion->id)->get();
 ```

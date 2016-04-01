@@ -3,6 +3,7 @@
 use Devfactory\Taxonomy\Models\TermRelation;
 use Devfactory\Taxonomy\Models\Term;
 use Devfactory\Taxonomy\Models\Vocabulary;
+use Devfactory\Taxonomy\Facades\TaxonomyFacade as Taxonomy;
 
 trait TaxonomyTrait {
 
@@ -125,7 +126,7 @@ trait TaxonomyTrait {
    */
   public function getTerms($vocabulary) {
 
-    $vocabulary = ($vocabulary instanceof Vocabulary) ? $vocabulary : Vocabulary::findOrFail($vocabulary);
+    $vocabulary = Taxonomy::getVocabulary($vocabulary);
 
     if(!$vocabulary)
       return;
@@ -143,12 +144,9 @@ trait TaxonomyTrait {
    * @return object
    *  A collection of TermRelation objects
    */
-  public function getTerm($name) {
+  public function getTerm($vocabulary) {
 
-    $vocabulary = ($vocabulary instanceof Vocabulary) ? $vocabulary : Vocabulary::findOrFail($vocabulary);
-
-    if(!$vocabulary)
-      return;
+    $vocabulary = Taxonomy::getVocabulary($vocabulary);
 
     return  $this->related()->where('term_relations.vocabulary_id', $vocabulary->id)->first();
   }
@@ -177,10 +175,7 @@ trait TaxonomyTrait {
    */
   public function removeTerms($vocabulary=false) {
 
-    if($vocabulary)
-      return $this->related()->delete();
-
-    $vocabulary = ($vocabulary instanceof Vocabulary) ? $vocabulary : Vocabulary::findOrFail($vocabulary);
+    $vocabulary = Taxonomy::getVocabulary($vocabulary);
 
     if(!$vocabulary)
       return false;
@@ -199,7 +194,14 @@ trait TaxonomyTrait {
    */
   public function scopeWhereHasTerm($query, $term_id) {
     return $query->whereHas('related', function($q) use($term_id) {
+
+      if( method_exists($term_id,'toArray') )
+        $term_id = $term_id->toArray();
+
       if (is_array($term_id)) {
+
+
+
         $q->whereIn('term_id', $term_id);
       }
       else {
@@ -218,7 +220,12 @@ trait TaxonomyTrait {
    */
   public function scopeWhereHasVocabulary($query, $vocabulary_id) {
     return $query->whereHas('related', function($q) use($vocabulary_id) {
+
+      if( method_exists($vocabulary_id,'toArray') )
+          $vocabulary_id = $vocabulary_id->toArray();
+
       if (is_array($vocabulary_id)) {
+
         $q->whereIn('vocabulary_id', $vocabulary_id);
       }
       else {
