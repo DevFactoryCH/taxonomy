@@ -14,6 +14,11 @@ class TermRelation extends \Eloquent {
     return $this->morphTo();
   }
 
+    public function vocabulary() {
+    return $this->belongsTo('Devfactory\Taxonomy\Models\Vocabulary');
+  }
+
+
   public function term() {
     return $this->belongsTo('Devfactory\Taxonomy\Models\Term');
   }
