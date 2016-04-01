@@ -125,25 +125,31 @@ class Taxonomy {
    * @return
    *  The Vocabulary Model object, otherwise NULL
    */
-  public function getTerms($vocabulary, $includeChild = true) 
+  public function getTerms($vocabulary, $parentName = true, $withParent = false) 
   {
     if( $vocabulary instanceof \Devfactory\Taxonomy\Models\Vocabulary )
+      $vocabulary = $vocabulary;
+    elseif( is_string( $vocabulary ) )
+      $vocabulary = $this->getVocabularyByName( $vocabulary );
+    else 
+      return collect([]);
+
+    if( $parentName === true )
       return $vocabulary->terms;
 
-    if( is_string( $vocabulary ) )
+    if( is_string($parentName) )
     {
+      $term = $this->getTerm($vocabulary, $parentName);
 
-      $vocabulary = $this->getVocabularyByName( $vocabulary );
+      $terms = $vocabulary->terms()->where($this->term->getTable().'.parent_id', $term->id)->get();
 
-      if( !$vocabulary )
-        return [];
+      if( $withParent )
+        return $terms->push($term);
 
-      if($includeChild)
-        return $vocabulary->terms;
-    
-      return $vocabulary->terms()->where($this->term->getTable().'.parent_id',0)->get();
-
+      return $terms;
     }
+
+    return collect([]);
   }
 
   /**
@@ -160,7 +166,7 @@ class Taxonomy {
     $vocabulary = $this->vocabulary->where('name', $name)->first();
 
     if (is_null($vocabulary)) {
-      return [];
+      return collect([]);
     }
 
     $parents = $this->term->whereParent(0)

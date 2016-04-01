@@ -3,7 +3,6 @@
 use Devfactory\Taxonomy\Models\TermRelation;
 use Devfactory\Taxonomy\Models\Term;
 use Devfactory\Taxonomy\Models\Vocabulary;
-use Devfactory\Taxonomy;
 
 trait TaxonomyTrait {
 
@@ -110,7 +109,6 @@ trait TaxonomyTrait {
 
     if(!$term)
       return false;
-    }
 
     return ($this->related()->where('term_id', $term->id )->count()) ? TRUE : FALSE;
   }
@@ -179,14 +177,13 @@ trait TaxonomyTrait {
    */
   public function removeTerms($vocabulary=false) {
 
-    if!($vocabulary)
+    if($vocabulary)
       return $this->related()->delete();
 
     $vocabulary = ($vocabulary instanceof Vocabulary) ? $vocabulary : Vocabulary::findOrFail($vocabulary);
 
     if(!$vocabulary)
       return false;
-    }
 
     return $this->related()->where('vocabulary_id', $vocabulary->id )->delete();
 
@@ -219,13 +216,13 @@ trait TaxonomyTrait {
    *
    * @return void
    */
-  public function scopeWhereHasVocabulary($query, $term_id) {
-    return $query->whereHas('related', function($q) use($term_id) {
-      if (is_array($term_id)) {
-        $q->whereIn('term_id', $term_id);
+  public function scopeWhereHasVocabulary($query, $vocabulary_id) {
+    return $query->whereHas('related', function($q) use($vocabulary_id) {
+      if (is_array($vocabulary_id)) {
+        $q->whereIn('vocabulary_id', $vocabulary_id);
       }
       else {
-        $q->where('term_id', '=', $term_id);
+        $q->where('vocabulary_id', '=', $vocabulary_id);
       }
     });
   }

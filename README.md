@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/DevFactoryCH/taxonomy.svg?branch=master)](https://travis-ci.org/DevFactoryCH/taxonomy)
+r[![Build Status](https://travis-ci.org/DevFactoryCH/taxonomy.svg?branch=master)](https://travis-ci.org/DevFactoryCH/taxonomy)
 [![Latest Stable Version](https://poser.pugx.org/devfactory/taxonomy/v/stable.svg)](https://packagist.org/packages/devfactory/taxonomy)
 [![Total Downloads](https://poser.pugx.org/devfactory/taxonomy/downloads.svg)](https://packagist.org/packages/devfactory/taxonomy)
 [![License](https://poser.pugx.org/devfactory/taxonomy/license.svg)](https://packagist.org/packages/devfactory/taxonomy)
@@ -290,18 +290,18 @@ $car->removeTerms($vocabularyRegion);
 
 **Get all model which belong to certain vocabulary**
 ```php
-$vocabularyRegion = Taxonomy::getVocabularyByName('Region')->list('id');
+$vocabularyRegion = Taxonomy::getVocabularyByName('Region');
 
-$cars = Car::whereHasVocabulary($vocabularyRegion)->get();
+$cars = Car::whereHasVocabulary($vocabularyRegion->id)->get();
 ```
 
 **Get all model which belong to certain term(s)**
 ```php
-$terms = Taxonomy::getTerms('Region')->list('id');
+$terms = Taxonomy::getTerms('Region')->pluck('id');
 
 $cars = Car::whereHasTerm($terms)->get();
 
 // Only Child of Asia
-$terms = Taxonomy::getTerms('Region','Asia')->list('id');
+$terms = Taxonomy::getTerms('Region','Asia')->pluck('id');
 $cars = Car::whereHasTerm($terms)->get();
 ```
