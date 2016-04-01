@@ -23,11 +23,11 @@ class Term extends \Eloquent {
   }
 
   public function childrens() {
-    return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent_id', 'id')
-      ->orderBy('weight', 'ASC');
+    return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent_id', 'id');
   }
 
-  public function parentTerm() {
+  public function parent() {
     return $this->hasOne('Devfactory\Taxonomy\Models\Term', 'id', 'parent_id');
   }
+
 }

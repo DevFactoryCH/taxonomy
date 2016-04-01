@@ -114,11 +114,12 @@ class Taxonomy {
     if( $parentName === true )
       return $vocabulary->terms;
 
-    if( is_string($parentName) )
+
+    if( $parentName )
     {
       $term = $this->getTerm($vocabulary, $parentName);
 
-      $terms = $vocabulary->terms()->where($this->term->getTable().'.parent_id', $term->id)->get();
+      $terms = $vocabulary->terms()->where($this->term->getTable().'.parent_id','=', $term->id)->get();
 
       if( $withParent )
         return $terms->push($term);
@@ -228,9 +229,9 @@ class Taxonomy {
    *
    * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
-  public function createTerm($vocabulary_name, $term = array() ) 
+  public function createTerm($vocabulary, $term = array() ) 
   {
-    $vocabulary = $this->vocabulary->where('name', $vocabulary_name)->first();
+    $vocabulary = $this->getVocabulary($vocabulary);
 
     if(!$vocabulary)
     {

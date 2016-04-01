@@ -3,7 +3,6 @@
 use Devfactory\Taxonomy\Models\TermRelation;
 use Devfactory\Taxonomy\Models\Term;
 use Devfactory\Taxonomy\Models\Vocabulary;
-use Devfactory\Taxonomy\Facades\TaxonomyFacade as Taxonomy;
 
 trait TaxonomyTrait {
 
@@ -32,18 +31,21 @@ trait TaxonomyTrait {
     if(!$term)
       return;
 
-    // Check if the new term is already there
-    $related = $this->related()->first();
+    if( $this->hasTerm($term) )
+      return $this->updateTerm($term,$description);
 
-    if( $related && $related->term->id == $term->id )
-    {
-      return $this->updateTerm($term, $description);
-    }
+    // Check if the new term is already there
+    // $related = $this->related()->first();
+
+    // if( $related && $related->term->id == $term->id )
+    // {
+    //   return $this->updateTerm($term, $description);
+    // }
 
     // Remove all term from same vocabulary
-    $this->related()->where('relationable_id', $this->id)->delete();
+    $this->related()->where('relationable_id', $this->id)->where('vocabulary_id',$term->vocabulary->id)->delete();
 
-    return $this->addTerm($term->id,$description);
+    return $this->addTerm($term,$description);
   }
 
   /**
@@ -61,6 +63,9 @@ trait TaxonomyTrait {
 
     if(!$term)
       return;
+
+    if( $this->hasTerm($term) )
+      return $this->updateTerm($term,$description);
 
     $term_relation = [
       'term_id' => $term->id,
@@ -126,7 +131,7 @@ trait TaxonomyTrait {
    */
   public function getTerms($vocabulary) {
 
-    $vocabulary = Taxonomy::getVocabulary($vocabulary);
+    $vocabulary = \Devfactory\Taxonomy\Facades\TaxonomyFacade::getVocabulary($vocabulary);
 
     if(!$vocabulary)
       return;
@@ -146,7 +151,7 @@ trait TaxonomyTrait {
    */
   public function getTerm($vocabulary) {
 
-    $vocabulary = Taxonomy::getVocabulary($vocabulary);
+    $vocabulary = \Devfactory\Taxonomy\Facades\TaxonomyFacade::getVocabulary($vocabulary);
 
     return  $this->related()->where('term_relations.vocabulary_id', $vocabulary->id)->first();
   }
@@ -175,7 +180,7 @@ trait TaxonomyTrait {
    */
   public function removeTerms($vocabulary=false) {
 
-    $vocabulary = Taxonomy::getVocabulary($vocabulary);
+    $vocabulary = \Devfactory\Taxonomy\Facades\TaxonomyFacade::getVocabulary($vocabulary);
 
     if(!$vocabulary)
       return false;
