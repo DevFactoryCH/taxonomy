@@ -181,6 +181,22 @@ class Taxonomy {
     });
   }
 
+
+  public function recurseRoot( $term )
+  {
+
+    if($term->parent_id == 0 )
+      return $term;
+
+    if($term->parent)
+    {
+      return $this->recurseRoot($term->parent);
+    }
+
+  }
+
+
+
   /**
    * Delete a Vocabulary by ID
    *

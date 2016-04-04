@@ -2,6 +2,8 @@
 
 class Term extends \Eloquent {
 
+  protected $hidden = ['created_at','updated_at'];
+
   protected $fillable = [
     'name',
     'vocabulary_id',
@@ -13,6 +15,8 @@ class Term extends \Eloquent {
   public static $rules = [
     'name' => 'required'
   ];
+
+
 
   public function termRelation() {
     return $this->morphMany('TermRelation', 'relationable');
@@ -29,5 +33,11 @@ class Term extends \Eloquent {
   public function parent() {
     return $this->hasOne('Devfactory\Taxonomy\Models\Term', 'id', 'parent_id');
   }
+
+  public function root()
+  {
+    return \Devfactory\Taxonomy\Facades\TaxonomyFacade::recurseRoot($this);
+  }
+
 
 }

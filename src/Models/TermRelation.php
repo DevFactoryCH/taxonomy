@@ -1,7 +1,8 @@
 <?php namespace Devfactory\Taxonomy\Models;
 
 class TermRelation extends \Eloquent {
-
+  protected $hidden = ['created_at','updated_at'];
+  
   protected $fillable = [
     'term_id',
     'vocabulary_id',

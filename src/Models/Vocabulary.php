@@ -1,7 +1,7 @@
 <?php namespace Devfactory\Taxonomy\Models;
 
 class Vocabulary extends \Eloquent {
-
+  protected $hidden = ['created_at','updated_at'];
   protected $fillable = [
     'name',
   ];

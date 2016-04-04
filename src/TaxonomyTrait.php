@@ -7,6 +7,54 @@ use Devfactory\Taxonomy\Models\Vocabulary;
 trait TaxonomyTrait {
 
   /**
+   * Get related vocabulary
+   */
+
+  public function getTaxonomiesAttribute()
+  {
+      $relatedGrouped = $this->related()->get()->groupBy('vocabulary_id');
+
+      $groupedTaxonomy = [];
+
+      foreach ($relatedGrouped as $key => $relateds) {
+        // var_dump($taxonomy);
+        $vocabulary = Vocabulary::find($key);
+
+        $groupedTaxonomy[$key]['name'] = $vocabulary->name;
+        $groupedTaxonomy[$key]['id'] = $vocabulary->id;
+
+        $groupedTaxonomy[$key]['terms'] = [];
+
+        foreach ($relateds as $related) {
+
+          $term = $related->term;
+
+          $termData = [ 
+                        'id'                  => $term->id,
+                        'name'                => $term->name,
+                        'description'         => $term->description,
+                        'root_term_id'           => false,
+                        'root_term_name'         => false,
+                        'root_term_description'  => false
+                        ];
+
+          $root = $term->root();
+
+          if( $root->id != $term->id )
+          {
+            $termData['root_term_id'] = $root->id;
+            $termData['root_term_name'] = $root->name;
+            $termData['root_term_description'] = $root->description;
+          }
+
+          array_push( $groupedTaxonomy[$key]['terms'], $termData ); 
+        }
+
+      }
+
+      return $this->attributes['taxonomies'] = $groupedTaxonomy;
+  }
+  /**
    * Return collection of tags related to the tagged model
    *
    * @return Illuminate\Database\Eloquent\Collection
