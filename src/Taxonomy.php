@@ -145,15 +145,13 @@ class Taxonomy {
   }
 
   /**
-   * Delete a Vocabulary by ID
+   * Delete a Vocabulary by name
    *
-   * @param int $id
-   *  The ID of the Vocabulary to delete
+   * @param string $name
+   *  The name of the Vocabulary to delete
    *
    * @return bool
    *  TRUE if Vocabulary is deletes, otherwise FALSE
-   *
-   * @thrown Illuminate\Database\Eloquent\ModelNotFoundException
    */
   public function deleteVocabularyByName($name) {
     $vocabulary = $this->vocabulary->where('name', $name)->first();
