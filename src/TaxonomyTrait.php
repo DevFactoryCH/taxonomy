@@ -17,13 +17,16 @@ trait TaxonomyTrait {
       $groupedTaxonomy = [];
 
       foreach ($relatedGrouped as $key => $relateds) {
-        // var_dump($taxonomy);
+
         $vocabulary = Vocabulary::find($key);
 
-        $groupedTaxonomy[$key]['name'] = $vocabulary->name;
-        $groupedTaxonomy[$key]['id'] = $vocabulary->id;
+        $slug = str_slug($vocabulary->name,'_');
 
-        $groupedTaxonomy[$key]['terms'] = [];
+        $groupedTaxonomy[$slug] = [];
+        // $groupedTaxonomy[$key]['name'] = $vocabulary->name;
+        // $groupedTaxonomy[$key]['id'] = $vocabulary->id;
+
+        // $groupedTaxonomy[$key]['terms'] = [];
 
         foreach ($relateds as $related) {
 
@@ -47,7 +50,7 @@ trait TaxonomyTrait {
             $termData['root_term_description'] = $root->description;
           }
 
-          array_push( $groupedTaxonomy[$key]['terms'], $termData ); 
+          array_push( $groupedTaxonomy[$slug], $termData ); 
         }
 
       }
