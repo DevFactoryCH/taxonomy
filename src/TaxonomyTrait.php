@@ -250,7 +250,9 @@ trait TaxonomyTrait {
    */
   public function scopeWhereHasTerm($query, $term_id) 
   {
-    if( is_int($term_id) )
+
+
+    if( !is_array($term_id) )
     {
       return $query->whereHas('related', function($q) use($term_id) 
       {        
@@ -282,7 +284,7 @@ trait TaxonomyTrait {
    */
   public function scopeWhereHasVocabulary($query, $vocabulary_id) 
   {
-    if( is_int($vocabulary_id) )
+    if( !is_array($vocabulary_id) )
     {
       return $query->whereHas('related', function($q) use($vocabulary_id) 
       {        
