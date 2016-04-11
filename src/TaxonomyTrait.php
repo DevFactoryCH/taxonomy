@@ -12,50 +12,50 @@ trait TaxonomyTrait {
 
   public function getTaxonomiesAttribute()
   {
-      $relatedGrouped = $this->related()->get()->groupBy('vocabulary_id');
+    $relatedGrouped = $this->related()->get()->groupBy('vocabulary_id');
 
-      $groupedTaxonomy = [];
+    $groupedTaxonomy = [];
 
-      foreach ($relatedGrouped as $key => $relateds) {
+    foreach ($relatedGrouped as $key => $relateds) {
 
-        $vocabulary = Vocabulary::find($key);
+      $vocabulary = Vocabulary::find($key);
 
-        $slug = str_slug($vocabulary->name,'_');
+      $slug = str_slug($vocabulary->name,'_');
 
-        $groupedTaxonomy[$slug] = [];
+      $groupedTaxonomy[$slug] = [];
         // $groupedTaxonomy[$key]['name'] = $vocabulary->name;
         // $groupedTaxonomy[$key]['id'] = $vocabulary->id;
 
         // $groupedTaxonomy[$key]['terms'] = [];
 
-        foreach ($relateds as $related) {
+      foreach ($relateds as $related) {
 
-          $term = $related->term;
+        $term = $related->term;
 
-          $termData = [ 
-                        'id'                  => $term->id,
-                        'name'                => $term->name,
-                        'description'         => $term->description,
-                        'root_term_id'           => false,
-                        'root_term_name'         => false,
-                        'root_term_description'  => false
-                        ];
+        $termData = [ 
+        'id'                  => $term->id,
+        'name'                => $term->name,
+        'description'         => $term->description,
+        'root_term_id'           => false,
+        'root_term_name'         => false,
+        'root_term_description'  => false
+        ];
 
-          $root = $term->root();
+        $root = $term->root();
 
-          if( $root->id != $term->id )
-          {
-            $termData['root_term_id'] = $root->id;
-            $termData['root_term_name'] = $root->name;
-            $termData['root_term_description'] = $root->description;
-          }
-
-          array_push( $groupedTaxonomy[$slug], $termData ); 
+        if( $root->id != $term->id )
+        {
+          $termData['root_term_id'] = $root->id;
+          $termData['root_term_name'] = $root->name;
+          $termData['root_term_description'] = $root->description;
         }
 
+        array_push( $groupedTaxonomy[$slug], $termData ); 
       }
 
-      return $this->attributes['taxonomies'] = $groupedTaxonomy;
+    }
+
+    return $this->attributes['taxonomies'] = $groupedTaxonomy;
   }
   /**
    * Return collection of tags related to the tagged model
@@ -109,7 +109,7 @@ trait TaxonomyTrait {
    *  The TermRelation object
    */
   public function addTerm($term, $description="") {
-    
+
     $term = ($term instanceof Term) ? $term : Term::findOrFail($term);
 
     if(!$term)
@@ -119,9 +119,9 @@ trait TaxonomyTrait {
       return $this->updateTerm($term,$description);
 
     $term_relation = [
-      'term_id' => $term->id,
-      'vocabulary_id' => $term->vocabulary_id,
-      'description' => $description,
+    'term_id' => $term->id,
+    'vocabulary_id' => $term->vocabulary_id,
+    'description' => $description,
     ];
 
     return $this->related()->save(new TermRelation($term_relation));
@@ -248,22 +248,28 @@ trait TaxonomyTrait {
    *
    * @return void
    */
-  public function scopeWhereHasTerm($query, $term_id) {
-    return $query->whereHas('related', function($q) use($term_id) {
+  public function scopeWhereHasTerm($query, $term_id) 
+  {
+    if( is_int($term_id) )
+    {
+      return $query->whereHas('related', function($q) use($term_id) 
+      {        
+          $q->where('term_id', '=', $term_id );
+      });
+    } 
 
-      if( method_exists($term_id,'toArray') )
-        $term_id = $term_id->toArray();
+    if( method_exists($term_id,'toArray') )
+      $term_id = $term_id->toArray();
 
-      if (is_array($term_id)) {
+    foreach ($term_id as $single_term_id) 
+    {
+      $query = $query->whereHas('related', function($q) use($single_term_id) 
+      {
+          $q->where('term_id', '=', $single_term_id );
+      });
+    }
 
-
-
-        $q->whereIn('term_id', $term_id);
-      }
-      else {
-        $q->where('term_id', '=', $term_id);
-      }
-    });
+    return $query;
   }  
 
   /**
@@ -274,19 +280,27 @@ trait TaxonomyTrait {
    *
    * @return void
    */
-  public function scopeWhereHasVocabulary($query, $vocabulary_id) {
-    return $query->whereHas('related', function($q) use($vocabulary_id) {
+  public function scopeWhereHasVocabulary($query, $vocabulary_id) 
+  {
+    if( is_int($vocabulary_id) )
+    {
+      return $query->whereHas('related', function($q) use($vocabulary_id) 
+      {        
+          $q->where('vocabulary_id', '=', $vocabulary_id );
+      });
+    } 
 
-      if( method_exists($vocabulary_id,'toArray') )
-          $vocabulary_id = $vocabulary_id->toArray();
+    if( method_exists($vocabulary_id,'toArray') )
+      $vocabulary_id = $vocabulary_id->toArray();
 
-      if (is_array($vocabulary_id)) {
+    foreach ($vocabulary_id as $single_vocabulary_id) 
+    {
+      $query = $query->whereHas('related', function($q) use($single_vocabulary_id) 
+      {
+          $q->where('vocabulary_id', '=', $single_vocabulary_id );
+      });
+    }
 
-        $q->whereIn('vocabulary_id', $vocabulary_id);
-      }
-      else {
-        $q->where('vocabulary_id', '=', $vocabulary_id);
-      }
-    });
+    return $query;
   }
 }
