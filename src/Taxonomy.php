@@ -59,7 +59,7 @@ class Taxonomy {
   }
 
   /**
-   * Get a Vocabulary by name
+   * Get single term by name
    *
    * @param string $name
    *  The name of the Vocabulary to fetch
@@ -76,27 +76,7 @@ class Taxonomy {
   }
 
   /**
-   * Get a Vocabulary by name
-   *
-   * @param string $name
-   *  The name of the Vocabulary to fetch
-   *
-   * @return
-   *  The Vocabulary Model object, otherwise NULL
-   */
-  public function getTermsByNameAsArray( $vocabulary , $field='name' ) 
-  {
-    $vocabulary = $this->getVocabulary($vocabulary);
-
-    if (!is_null($vocabulary)) {
-      return $vocabulary->terms->lists('name', 'id')->toArray();
-    }
-
-    return [];
-  }
-
-  /**
-   * Get a Vocabulary by name
+   * Get a terms 
    *
    * @param string $name
    *  The name of the Vocabulary to fetch
@@ -129,6 +109,28 @@ class Taxonomy {
 
     return collect([]);
   }
+
+  /**
+   * Get a Vocabulary by name
+   *
+   * @param string $name
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getTermsByNameAsArray( $vocabulary , $field='name' ) 
+  {
+    $vocabulary = $this->getVocabulary($vocabulary);
+
+    if (!is_null($vocabulary)) {
+      return $vocabulary->terms->lists('name', 'id')->toArray();
+    }
+
+    return [];
+  }
+
+
 
   /**
    * Get a Vocabulary by name as an options array for dropdowns

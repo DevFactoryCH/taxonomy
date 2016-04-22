@@ -151,6 +151,7 @@ trait TaxonomyTrait {
   }
 
 
+
   /**
    * Check if the Model instance has the passed term as an existing relation
    *
@@ -161,15 +162,66 @@ trait TaxonomyTrait {
    *  The TermRelation object
    */
   public function hasTerm($term) {
-
     $term = ($term instanceof Term) ? $term : Term::findOrFail($term);
-
     if(!$term)
       return false;
-
     return ($this->related()->where('term_id', $term->id )->count()) ? TRUE : FALSE;
   }
 
+  /**
+   * Check if the Model instance has the passed term as an existing relation
+   *
+   * @param mixed $term_id
+   *  The ID of the term or an instance of the Term object
+   *
+   * @return object
+   *  The TermRelation object
+   */
+  public function hasVocabulary($vocabulary, $name=false) {
+
+    $vocabulary = \Devfactory\Taxonomy\Facades\TaxonomyFacade::getVocabulary($vocabulary);
+
+    if(!$vocabulary)
+      return false;
+
+    if(!$name)
+      return  $this->related()->where('term_relations.vocabulary_id', $vocabulary->id)->first();
+
+    return  $this ->related()
+                  ->where('term_relations.vocabulary_id', $vocabulary->id)
+                  ->whereHas('term', function($q) use($name) {        
+                                  $q->where('term.name', '=', $name );
+                              })
+                  ->first();
+  }
+
+  /**
+   * Get all the term relations for a given vocabulary that are linked to the current
+   * Model.
+   *
+   * @param $name string
+   *  The name of the vocabulary
+   *
+   * @return object
+   *  A collection of TermRelation objects
+   */
+  public function getTerm($vocabulary,$name=false) {
+
+    $vocabulary = \Devfactory\Taxonomy\Facades\TaxonomyFacade::getVocabulary($vocabulary);
+
+    if(!$vocabulary)
+      return false;
+
+    if(!$name)
+      return  $this->related()->where('term_relations.vocabulary_id', $vocabulary->id)->first();
+
+    return  $this ->related()
+                  ->where('term_relations.vocabulary_id', $vocabulary->id)
+                  ->whereHas('term', function($q) use($name) {        
+                                  $q->where('term.name', '=', $name );
+                              })
+                  ->first();
+  }
   /**
    * Get all the terms for a given vocabulary that are linked to the current
    * Model.
@@ -190,22 +242,6 @@ trait TaxonomyTrait {
     return  $this->related()->where('term_relations.vocabulary_id', $vocabulary->id)->get();
   }  
 
-  /**
-   * Get all the terms for a given vocabulary that are linked to the current
-   * Model.
-   *
-   * @param $name string
-   *  The name of the vocabulary
-   *
-   * @return object
-   *  A collection of TermRelation objects
-   */
-  public function getTerm($vocabulary) {
-
-    $vocabulary = \Devfactory\Taxonomy\Facades\TaxonomyFacade::getVocabulary($vocabulary);
-
-    return  $this->related()->where('term_relations.vocabulary_id', $vocabulary->id)->first();
-  }
 
 
   /**
