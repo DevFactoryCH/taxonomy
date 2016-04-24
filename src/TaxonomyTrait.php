@@ -205,6 +205,25 @@ trait TaxonomyTrait {
    * @return object
    *  A collection of TermRelation objects
    */
+  public function getRelated($term,$name=false) {
+
+    $term = ($term instanceof Term) ? $term : Term::findOrFail($term);
+    if(!$term)
+      return false;
+
+    return $this->related()->where('term_id', $term->id )->first();
+  }
+
+  /**
+   * Get all the term relations for a given vocabulary that are linked to the current
+   * Model.
+   *
+   * @param $name string
+   *  The name of the vocabulary
+   *
+   * @return object
+   *  A collection of TermRelation objects
+   */
   public function getTerm($vocabulary,$name=false) {
 
     $vocabulary = \Devfactory\Taxonomy\Facades\TaxonomyFacade::getVocabulary($vocabulary);
