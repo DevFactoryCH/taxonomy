@@ -89,18 +89,18 @@ class TermsController extends BaseController {
 
   public function getIndex() {
     $vocabulary = Vocabulary::findOrFail(Input::get('id'));
-    $terms = $vocabulary->terms()->orderBy('parent', 'ASC')->orderBy('weight', 'ASC')->get();
+    $terms = $vocabulary->terms()->orderBy('parent_id', 'ASC')->orderBy('weight', 'ASC')->get();
 
     $ordered_terms = [];
     foreach ($terms as $term) {
-      if (!$term->parent) {
+      if (!$term->parent_id) {
         $ordered_terms[$term->id] = [
           'term' => $term,
           'children' => [],
         ];
       }
       else {
-        $ordered_terms[$term->parent]['children'][] = $term;
+        $ordered_terms[$term->parent_id]['children'][] = $term;
       }
     }
 

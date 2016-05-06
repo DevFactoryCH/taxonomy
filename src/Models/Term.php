@@ -2,31 +2,42 @@
 
 class Term extends \Eloquent {
 
+  protected $hidden = ['created_at','updated_at'];
+
   protected $fillable = [
     'name',
     'vocabulary_id',
-    'parent',
+    'parent_id',
     'weight',
+    'description'
   ];
 
-	public static $rules = [
-		'name' => 'required'
+  public static $rules = [
+    'name' => 'required'
   ];
+
+
 
   public function termRelation() {
-    return $this->morphMany('Devfactory\Taxonomy\Models\TermRelation', 'relationable');
+    return $this->morphMany('TermRelation', 'relationable');
   }
 
-	public function vocabulary() {
-		return $this->belongsTo('Devfactory\Taxonomy\Models\Vocabulary');
-	}
+  public function vocabulary() {
+    return $this->belongsTo('Devfactory\Taxonomy\Models\Vocabulary');
+  }
 
   public function childrens() {
-    return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent', 'id')
-      ->orderBy('weight', 'ASC');
+    return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent_id', 'id');
   }
 
-  public function parentTerm() {
-    return $this->hasOne('Devfactory\Taxonomy\Models\Term', 'id', 'parent');
+  public function parent() {
+    return $this->hasOne('Devfactory\Taxonomy\Models\Term', 'id', 'parent_id');
   }
+
+  public function root()
+  {
+    return \Devfactory\Taxonomy\Facades\TaxonomyFacade::recurseRoot($this);
+  }
+
+
 }
