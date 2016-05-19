@@ -13,8 +13,16 @@ This package allows you to create vocabularies with terms in Laravel 4 and 5
 
 In your `composer.json` add:
 
+#### 5.0 - 5.1
+
 	"require": {
 		"devfactory/taxonomy": "3.0.*"
+	}
+
+#### 5.2+
+
+	"require": {
+		"devfactory/taxonomy": "3.1.*"
 	}
 
 From the terminal run
