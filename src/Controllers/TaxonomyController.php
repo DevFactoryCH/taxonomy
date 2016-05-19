@@ -17,13 +17,13 @@ use Devfactory\Taxonomy\Models\Vocabulary;
 use Devfactory\Taxonomy\Models\Term;
 use Devfactory\Taxonomy\Models\TermRelation;
 
-use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class TaxonomyController extends BaseController {
 
-	use DispatchesJobs, ValidatesRequests;
+	use DispatchesCommands, ValidatesRequests;
 
 
   protected $vocabulary;

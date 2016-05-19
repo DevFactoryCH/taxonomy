@@ -6,13 +6,13 @@ use Devfactory\Taxonomy\Models\Term;
 trait TaxonomyTrait {
 
   /**
-     * Return collection of tags related to the tagged model
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public function related() {
-        return $this->morphMany('Devfactory\Taxonomy\Models\TermRelation', 'relationable');
-    }
+	 * Return collection of tags related to the tagged model
+	 *
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	public function related() {
+		return $this->morphMany('Devfactory\Taxonomy\Models\TermRelation', 'relationable');
+	}
 
   /**
    * Add an existing term to the inheriting model
@@ -31,7 +31,7 @@ trait TaxonomyTrait {
       'vocabulary_id' => $term->vocabulary_id,
     ];
 
-    return $this->related()->save(new TermRelation($term_relation));
+    $this->related()->save(new TermRelation($term_relation));
   }
 
   /**
