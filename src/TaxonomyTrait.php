@@ -31,7 +31,7 @@ trait TaxonomyTrait {
       'vocabulary_id' => $term->vocabulary_id,
     ];
 
-    $this->related()->save(new TermRelation($term_relation));
+    return $this->related()->save(new TermRelation($term_relation));
   }
 
   /**
