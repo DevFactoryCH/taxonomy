@@ -9,10 +9,17 @@ This package allows you to create vocabularies with terms in Laravel 5
 ### Laravel 5
 
 In your `composer.json` add:
-m
+
     "require": {
-        "devfactory/taxonomy": "3.0.*"
+        "tonjoo/taxonomy": "master"
     }
+
+    "repositories": [
+        {
+            "url": "https://github.com/todiadiyatmo/taxonomy.git",
+            "type": "git"
+        }
+    ]
 
 From the terminal run
 
