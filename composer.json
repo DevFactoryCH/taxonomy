@@ -1,9 +1,13 @@
 {
-  "name": "devfactory/taxonomy",
+  "name": "tonjoo/taxonomy",
   "description": "Create and manage a heirarchical taxonomy of terms within different vocabularies",
   "license": "MIT",
   "keywords": ["taxonomy"],
   "authors": [
+    {
+      "name": "Todi Adiyatmo Wijoyo",
+      "email": "t@tonjoo.com"
+    },
     {
       "name": "Mark Cameron",
       "email": "mark.cameron@devfactory.ch"
@@ -20,11 +24,6 @@
   "autoload": {
     "psr-4": {
       "Devfactory\\Taxonomy\\": "src/"
-    }
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "2.0.x-dev"
     }
   }
 }
