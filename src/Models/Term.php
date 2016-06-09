@@ -4,6 +4,12 @@ class Term extends \Eloquent {
 
   protected $hidden = ['created_at','updated_at'];
 
+
+  protected $attributes = [
+     'weight' => 0,
+     'parent_id' => 0,
+  ];
+
   protected $fillable = [
     'name',
     'vocabulary_id',
