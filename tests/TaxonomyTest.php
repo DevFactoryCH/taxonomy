@@ -204,8 +204,8 @@ class TaxonomyTest extends \PHPUnit_Framework_TestCase {
     $mockToArray->shouldReceive('toArray')
       ->andReturn(true);
 
-    $mockList = m::mock('lists');
-    $mockList->shouldReceive('lists')
+    $mockList = m::mock('pluck');
+    $mockList->shouldReceive('pluck')
       ->with('name', 'id')
       ->andReturn($mockToArray);
 
