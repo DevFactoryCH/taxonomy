@@ -3,7 +3,7 @@
 [![Total Downloads](https://poser.pugx.org/devfactory/taxonomy/downloads.svg)](https://packagist.org/packages/devfactory/taxonomy)
 [![License](https://poser.pugx.org/devfactory/taxonomy/license.svg)](https://packagist.org/packages/devfactory/taxonomy)
 
-#Taxonomy
+# Taxonomy
 
 This package allows you to create vocabularies with terms in Laravel 4 and 5
 
