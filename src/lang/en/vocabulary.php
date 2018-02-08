@@ -39,4 +39,5 @@ return array(
     ),
   ),
   'vocabularies' => 'Vocabularies',
+  'purge' => 'Purge',
 );

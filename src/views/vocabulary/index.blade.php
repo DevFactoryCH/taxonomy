@@ -8,10 +8,18 @@
 
   <div class="row">
     <div class="col-sm-12">
+      <div class="btn-group">
         {!! Form::open(array('method'=>'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getCreate'))) !!}
         {!! Form::submit(trans('general.buttons.add'), array('class' => 'btn btn-primary btn-flat margin-bottom')) !!}
         {!! Form::close() !!}
-   </div>
+      </div>
+
+      <div class="btn-group">
+        {!! Form::open(array('method'=>'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getPurgeDeadRelations'))) !!}
+        {!! Form::submit(trans('taxonomy::vocabulary.purge'), array('class' => 'btn btn-primary btn-flat margin-bottom')) !!}
+        {!! Form::close() !!}
+      </div>
+    </div>
   </div>
 
   <div class="row">
@@ -54,15 +62,15 @@
                   <td class="text-right">
 
                     <div class="btn-group">
-                    <div class="btn-group">
-                          {!! Form::open(array('method'=>'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getEdit', $vocabulary->id))) !!}
-                          {!! Form::submit(trans('general.buttons.edit'), array('class' => 'btn btn-xs btn-primary btn-flat')) !!}
-                          {!! Form::close() !!}
+                      <div class="btn-group">
+                        {!! Form::open(array('method'=>'GET', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getEdit', $vocabulary->id))) !!}
+                        {!! Form::submit(trans('general.buttons.edit'), array('class' => 'btn btn-xs btn-primary btn-flat')) !!}
+                        {!! Form::close() !!}
                       </div>
                       <div class="btn-group">
-                          {!! Form::open(array('method'=>'DELETE', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@deleteDestroy', $vocabulary->id))) !!}
-                          {!! Form::submit(trans('general.buttons.delete'), array('class' => 'delete-confirm-dialog btn btn-xs btn-danger btn-flat')) !!}
-                          {!! Form::close() !!}
+                        {!! Form::open(array('method'=>'DELETE', 'url' => action('\Devfactory\Taxonomy\Controllers\TaxonomyController@deleteDestroy', $vocabulary->id))) !!}
+                        {!! Form::submit(trans('general.buttons.delete'), array('class' => 'delete-confirm-dialog btn btn-xs btn-danger btn-flat')) !!}
+                        {!! Form::close() !!}
                       </div>
                     </div>
 

@@ -31,7 +31,7 @@ class TaxonomyController extends BaseController {
 
   public function __construct(Vocabulary $vocabulary) {
     $this->vocabulary = $vocabulary;
-    $this->route_prefix = rtrim(config('taxonomy.route_prefix'), '.') . '.';
+    $this->route_prefix = rtrim(config('taxonomy.config.route_prefix'), '.') . '.';
 
     $layout = (object) [
       'extends' => config('taxonomy.config.layout.extends'),
@@ -165,6 +165,28 @@ class TaxonomyController extends BaseController {
       }
     }
 
+  }
+
+  /**
+   * Delete all the old TermRelations for orphaned content that has been deleted
+   *
+   *
+   * @return
+   */
+  public function getPurgeDeadRelations() {
+    $term_relations = TermRelation::get();
+
+    foreach ($term_relations as $term_relation) {
+      $model = $term_relation->relationable_type;
+      $relation = $model::find($term_relation->relationable_id);
+
+      if (is_null($relation)) {
+        dump($term_relation->id);
+        $term_relation->delete();
+      }
+
+      return Redirect::back();
+    }
   }
 
 }
