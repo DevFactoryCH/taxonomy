@@ -23,7 +23,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class TaxonomyController extends BaseController {
 
-	use DispatchesCommands, ValidatesRequests;
+  use DispatchesCommands, ValidatesRequests;
 
 
   protected $vocabulary;
@@ -181,12 +181,11 @@ class TaxonomyController extends BaseController {
       $relation = $model::find($term_relation->relationable_id);
 
       if (is_null($relation)) {
-        dump($term_relation->id);
         $term_relation->delete();
       }
-
-      return Redirect::back();
     }
+
+    return Redirect::back();
   }
 
 }
