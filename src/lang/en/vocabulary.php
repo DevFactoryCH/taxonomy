@@ -23,6 +23,7 @@ return array(
     'header' => 'Create a new Vocabulary',
     'label' => array(
       'name' => 'Name',
+      'slug' => 'Slug',
     ),
     'button' => array(
       'create' => 'Create',
