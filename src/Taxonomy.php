@@ -94,6 +94,24 @@ class Taxonomy {
   }
 
   /**
+   * Get a Vocabulary by slug
+   *
+   * @param string $slug
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getVocabularyBySlugAsArray($slug) {
+    $vocabulary = $this->vocabulary->where('slug', $slug)->first();
+
+    if (!is_null($vocabulary)) {
+      return $vocabulary->terms->pluck('name', 'id')->toArray();
+    }
+
+    return [];
+  }
+  /**
    * Get a Vocabulary by name as an options array for dropdowns
    *
    * @param string $name
