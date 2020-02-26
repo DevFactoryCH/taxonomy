@@ -29,9 +29,12 @@ class Taxonomy {
     if ($this->vocabulary->where('name', $name)->count()) {
       throw new Exceptions\VocabularyExistsException();
     }
+    if (!is_null($slug)&&$this->vocabulary->where('slug', $slug)->count()) {
+      throw new Exceptions\VocabularyExistsException();
+    }  
 
-		return $this->vocabulary->create(['name' => $name,'slug' => $slug]);
-	}
+    return $this->vocabulary->create(['name' => $name,'slug' => $slug]);
+  }
 
   /**
    * Get a Vocabulary by ID
@@ -119,7 +122,35 @@ class Taxonomy {
 
     return $options;
   }
+  /**
+   * Get a Vocabulary by slug as an options array for dropdowns
+   *
+   * @param string $slug
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getVocabularyBySlugOptionsArray($slug) {
+    $vocabulary = $this->vocabulary->where('slug', $slug)->first();
 
+    if (is_null($vocabulary)) {
+      return [];
+    }
+
+    $parents = $this->term->whereParent(0)
+      ->whereVocabularyId($vocabulary->id)
+      ->orderBy('weight', 'ASC')
+      ->get();
+
+    $options = [];
+    foreach ($parents as $parent) {
+      $options[$parent->id] = $parent->name;
+      $this->recurse_children($parent, $options);
+    }
+
+    return $options;
+  }
   /**
    * Recursively visit the children of a term and generate the '- ' option array for dropdowns
    *
@@ -175,6 +206,24 @@ class Taxonomy {
     return FALSE;
   }
 
+  /**
+   * Delete a Vocabulary by slug
+   *
+   * @param string $slug
+   *  The name of the Vocabulary to delete
+   *
+   * @return bool
+   *  TRUE if Vocabulary is deletes, otherwise FALSE
+   */
+  public function deleteVocabularyBySlug($slug) {
+    $vocabulary = $this->vocabulary->where('slug', $slug)->first();
+
+    if (!is_null($vocabulary)) {
+      return $vocabulary->delete();
+    }
+
+    return FALSE;
+  }
   /**
    * Create a new term in a specific vocabulary
    *
