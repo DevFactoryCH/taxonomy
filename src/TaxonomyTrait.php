@@ -72,6 +72,21 @@ trait TaxonomyTrait {
 
   /**
    * Get all the terms for a given vocabulary that are linked to the current
+   * Model.
+   *
+   * @param $slug string
+   *  The name of the vocabulary
+   *
+   * @return object
+   *  A collection of TermRelation objects
+   */
+  public function getTermsByVocabularySlug($slug) {
+    $vocabulary = \Taxonomy::getVocabularyBySlug($slug);
+
+    return $this->related()->where('vocabulary_id', $vocabulary->id)->get();
+  }
+  /**
+   * Get all the terms for a given vocabulary that are linked to the current
    * Model as a key value pair array.
    *
    * @param $name string
@@ -82,6 +97,30 @@ trait TaxonomyTrait {
    */
   public function getTermsByVocabularyNameAsArray($name) {
     $vocabulary = \Taxonomy::getVocabularyByName($name);
+
+    $term_relations = $this->related()->where('vocabulary_id', $vocabulary->id)->get();
+
+    $data = [];
+    foreach ($term_relations as $term_relation) {
+      $data[$term_relation->term->id] = $term_relation->term->name;
+    }
+
+    return $data;
+  }
+  
+  
+  /**
+   * Get all the terms for a given vocabulary that are linked to the current
+   * Model as a key value pair array.
+   *
+   * @param $slug string
+   *  The name of the vocabulary
+   *
+   * @return array
+   *  A key value pair array of the type 'id' => 'name'
+   */
+  public function getTermsByVocabularyNameAsArray($slug) {
+    $vocabulary = \Taxonomy::getVocabularyBySlug($slug);
 
     $term_relations = $this->related()->where('vocabulary_id', $vocabulary->id)->get();
 
