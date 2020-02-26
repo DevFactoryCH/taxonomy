@@ -82,7 +82,9 @@ class Taxonomy {
    * @return
    *  Return TRUE
    */
-  public function autoCreateSlugs($separator='-') {
+  public function autoCreateSlugs($separator=null) {
+    if(is_null($separator))
+      $separator="-";
     $vocabularies = $this->vocabulary->where('slug',null)->get();
     
     foreach($vocabularies as $vocabulary){
@@ -91,7 +93,7 @@ class Taxonomy {
       $vocabulary->name = $new_name;
       $vocabulary->save();
     }
-    return TRUE;
+    return true;
   }
   /**
    * Get a Vocabulary by ID
