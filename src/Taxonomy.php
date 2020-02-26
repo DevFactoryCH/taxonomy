@@ -25,12 +25,12 @@ class Taxonomy {
    *  The Vocabulary object if created, FALSE if error creating,
    *  Exception if the vocabulary name already exists.
    */
-  public function createVocabulary($name) {
+  public function createVocabulary($name,$slug=null) {
     if ($this->vocabulary->where('name', $name)->count()) {
       throw new Exceptions\VocabularyExistsException();
     }
 
-		return $this->vocabulary->create(['name' => $name]);
+		return $this->vocabulary->create(['name' => $name,'slug' => $slug]);
 	}
 
   /**
@@ -59,6 +59,18 @@ class Taxonomy {
     return $this->vocabulary->where('name', $name)->first();
   }
 
+  /**
+   * Get a Vocabulary by slug
+   *
+   * @param string $slug
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getVocabularyBySlug($slug) {
+    return $this->vocabulary->where('slug', $slug)->first();
+  }
   /**
    * Get a Vocabulary by name
    *
