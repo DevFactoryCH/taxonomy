@@ -22,7 +22,12 @@
             {!! $errors->has('name') ? Form::label('error', $errors->first('name'), array('class' => 'control-label')) : '' !!}
             {!! $errors->has('name') ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '' !!}
           </div>
-
+          <div class="form-group{!! $errors->has('slug') ? ' has-error has-feedback' : '' !!}">
+            {!! Form::label('slug', Lang::get('taxonomy::vocabulary.create.label.slug'), ['class' => 'control-label']) !!}
+            {!! Form::text('slug', NULL, ['class' => 'form-control']) !!}
+            {!! $errors->has('slug') ? Form::label('error', $errors->first('slug'), array('class' => 'control-label')) : '' !!}
+            {!! $errors->has('slug') ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '' !!}
+          </div>
         </div>
 
         <div class="box-footer">
