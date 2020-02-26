@@ -119,7 +119,7 @@ trait TaxonomyTrait {
    * @return array
    *  A key value pair array of the type 'id' => 'name'
    */
-  public function getTermsByVocabularyNameAsArray($slug) {
+  public function getTermsByVocabularySlugAsArray($slug) {
     $vocabulary = \Taxonomy::getVocabularyBySlug($slug);
 
     $term_relations = $this->related()->where('vocabulary_id', $vocabulary->id)->get();
