@@ -95,7 +95,7 @@ class Car extends \Eloquent {
 
 ## Usage
 
-Creating a vocabulary (per default, the separator is "-"):
+Creating a vocabulary (by default, the separator is "-"):
 
 ```php
 Taxonomy::createVocabulary('Cars'); // Taxonomy Object [Cars,cars]
