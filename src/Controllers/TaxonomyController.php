@@ -65,7 +65,7 @@ class TaxonomyController extends BaseController {
   public function postStore(Request $request) {
     $this->validate($request, isset($this->vocabulary->rules_create) ? $this->vocabulary->rules_create : $this->vocabulary->rules);
 
-    Vocabulary::create(Input::only('name'));
+    Vocabulary::create(Input::only('name','slug'));
 
     return Redirect::to(action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getIndex'))->with('success', 'Created');
 
@@ -97,7 +97,7 @@ class TaxonomyController extends BaseController {
     $this->validate($request, isset($this->vocabulary->rules_create) ? $this->vocabulary->rules_create : $this->vocabulary->rules);
 
     $vocabulary = $this->vocabulary->findOrFail($id);
-    $vocabulary->update(Input::only('name'));
+    $vocabulary->update(Input::only('name','slug'));
 
     return Redirect::to(action('\Devfactory\Taxonomy\Controllers\TaxonomyController@getIndex'))->with('success', 'Updated');
 

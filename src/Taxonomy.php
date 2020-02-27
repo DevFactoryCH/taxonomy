@@ -14,7 +14,7 @@ class Taxonomy {
     $this->vocabulary = $vocabulary;
     $this->term = $term;
   }
-
+ 
   /**
    * Create a new Vocabulary with the given name
    *
@@ -25,14 +25,42 @@ class Taxonomy {
    *  The Vocabulary object if created, FALSE if error creating,
    *  Exception if the vocabulary name already exists.
    */
-  public function createVocabulary($name) {
+  public function createVocabulary($name,$slug=null,$separator="-") {
+    if(is_null($slug))
+      $slug=str_slug($name,$separator);
+    else
+      $slug=str_slug($slug,$separator);
+    
     if ($this->vocabulary->where('name', $name)->count()) {
       throw new Exceptions\VocabularyExistsException();
     }
+    if (!is_null($slug)&&$this->vocabulary->where('slug', $slug)->count()) {
+      throw new Exceptions\VocabularyExistsException();
+    }  
+    
+    return $this->vocabulary->create(['name' => $name,'slug' => $slug]);
+  }
+  
+  /**
+   * Auto create slug
+   *
+   * @param string $separator
+   *  The separator for blank spaces
+   *
+   * @return
+   *  Return TRUE
+   */
+  public function autoCreateSlugs($separator="-") {
+    
+    $vocabularies = $this->vocabulary->where('slug',null)->get();
 
-		return $this->vocabulary->create(['name' => $name]);
-	}
-
+    foreach($vocabularies as $vocabulary){
+      $vocabulary->slug = str_slug($vocabulary->name,$separator);
+      $vocabulary->save();
+    }
+    return true;
+  }
+  
   /**
    * Get a Vocabulary by ID
    *
@@ -60,6 +88,18 @@ class Taxonomy {
   }
 
   /**
+   * Get a Vocabulary by slug
+   *
+   * @param string $slug
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getVocabularyBySlug($slug) {
+    return $this->vocabulary->where('slug', $slug)->first();
+  }
+  /**
    * Get a Vocabulary by name
    *
    * @param string $name
@@ -78,6 +118,24 @@ class Taxonomy {
     return [];
   }
 
+  /**
+   * Get a Vocabulary by slug
+   *
+   * @param string $slug
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getVocabularyBySlugAsArray($slug) {
+    $vocabulary = $this->vocabulary->where('slug', $slug)->first();
+
+    if (!is_null($vocabulary)) {
+      return $vocabulary->terms->pluck('name', 'id')->toArray();
+    }
+
+    return [];
+  }
   /**
    * Get a Vocabulary by name as an options array for dropdowns
    *
@@ -107,7 +165,35 @@ class Taxonomy {
 
     return $options;
   }
+  /**
+   * Get a Vocabulary by slug as an options array for dropdowns
+   *
+   * @param string $slug
+   *  The name of the Vocabulary to fetch
+   *
+   * @return
+   *  The Vocabulary Model object, otherwise NULL
+   */
+  public function getVocabularyBySlugOptionsArray($slug) {
+    $vocabulary = $this->vocabulary->where('slug', $slug)->first();
 
+    if (is_null($vocabulary)) {
+      return [];
+    }
+
+    $parents = $this->term->whereParent(0)
+      ->whereVocabularyId($vocabulary->id)
+      ->orderBy('weight', 'ASC')
+      ->get();
+
+    $options = [];
+    foreach ($parents as $parent) {
+      $options[$parent->id] = $parent->name;
+      $this->recurse_children($parent, $options);
+    }
+
+    return $options;
+  }
   /**
    * Recursively visit the children of a term and generate the '- ' option array for dropdowns
    *
@@ -163,6 +249,24 @@ class Taxonomy {
     return FALSE;
   }
 
+  /**
+   * Delete a Vocabulary by slug
+   *
+   * @param string $slug
+   *  The name of the Vocabulary to delete
+   *
+   * @return bool
+   *  TRUE if Vocabulary is deletes, otherwise FALSE
+   */
+  public function deleteVocabularyBySlug($slug) {
+    $vocabulary = $this->vocabulary->where('slug', $slug)->first();
+
+    if (!is_null($vocabulary)) {
+      return $vocabulary->delete();
+    }
+
+    return FALSE;
+  }
   /**
    * Create a new term in a specific vocabulary
    *

@@ -3,7 +3,7 @@
 class Vocabulary extends \Eloquent {
 
   protected $fillable = [
-    'name',
+    'name', 'slug',
   ];
 
   protected $table = 'vocabularies';

@@ -95,10 +95,12 @@ class Car extends \Eloquent {
 
 ## Usage
 
-Creating a vocabulary:
+Creating a vocabulary (by default, the separator is "-"):
 
 ```php
-Taxonomy::createVocabulary('Cars');
+Taxonomy::createVocabulary('Cars'); // Taxonomy Object [Cars,cars]
+Taxonomy::createVocabulary('Cars','cars-slug'); // Taxonomy Object [Cars,cars-slug]
+Taxonomy::createVocabulary('Cars','Cars Slug','-'); // Taxonomy Object [Cars,cars-slug]
 ```
 
 Retrieving a Vocabulary:
@@ -106,6 +108,7 @@ Retrieving a Vocabulary:
 ```php
 $vocabulary = Taxonomy::getVocabulary(1);             // Using ID
 $vocabulary = Taxonomy::getVocabularyByName('Cars');  // Using Name
+$vocabulary = Taxonomy::getVocabularyBySlug('cars-slug');  // Using Slug
 ```
 
 Deleting a Vocabulary:
@@ -113,6 +116,7 @@ Deleting a Vocabulary:
 ```php
 Taxonomy::deleteVocabulary(1);             // Using ID
 Taxonomy::deleteVocabularyByName('Cars');  // Using Name
+Taxonomy::deleteVocabularyBySlug('cars-slug');  // Using Slug
 ```
 
 Adding a Term to a vocabulary:
