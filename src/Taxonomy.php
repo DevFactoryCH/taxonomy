@@ -14,45 +14,7 @@ class Taxonomy {
     $this->vocabulary = $vocabulary;
     $this->term = $term;
   }
-  /**
-   * Cleang string of accents mark
-   *
-   * @param string $str
-   *  The string to clean up
-   *
-   * @return string
-   *  Return the string purified
-   */
-  private function cleanAccentMark($str){
-        $str = str_replace(
-            array('Á', 'À', 'Â', 'Ä', 'á', 'à', 'ä', 'â', 'ª'),
-            array('A', 'A', 'A', 'A', 'a', 'a', 'a', 'a', 'a'),
-            $str
-        );
-        $str = str_replace(
-            array('É', 'È', 'Ê', 'Ë', 'é', 'è', 'ë', 'ê'),
-            array('E', 'E', 'E', 'E', 'e', 'e', 'e', 'e'),
-            $str );
-        $str = str_replace(
-            array('Í', 'Ì', 'Ï', 'Î', 'í', 'ì', 'ï', 'î'),
-            array('I', 'I', 'I', 'I', 'i', 'i', 'i', 'i'),
-            $str );
-        $str = str_replace(
-            array('Ó', 'Ò', 'Ö', 'Ô', 'ó', 'ò', 'ö', 'ô'),
-            array('O', 'O', 'O', 'O', 'o', 'o', 'o', 'o'),
-            $str );
-        $str = str_replace(
-            array('Ú', 'Ù', 'Û', 'Ü', 'ú', 'ù', 'ü', 'û'),
-            array('U', 'U', 'U', 'U', 'u', 'u', 'u', 'u'),
-            $str );
-        $str = str_replace(
-            array('Ñ', 'ñ', 'Ç', 'ç'),
-            array('N', 'n', 'C', 'c'),
-            $str
-        );
-
-        return $str;
-    }
+ 
   /**
    * Create a new Vocabulary with the given name
    *
@@ -63,14 +25,18 @@ class Taxonomy {
    *  The Vocabulary object if created, FALSE if error creating,
    *  Exception if the vocabulary name already exists.
    */
-  public function createVocabulary($name,$slug=null) {
+  public function createVocabulary($name,$slug=null,$separator="-") {
     if ($this->vocabulary->where('name', $name)->count()) {
       throw new Exceptions\VocabularyExistsException();
     }
     if (!is_null($slug)&&$this->vocabulary->where('slug', $slug)->count()) {
       throw new Exceptions\VocabularyExistsException();
     }  
-
+    if(is_null($slug))
+      $slug=str_slug($name,$separator);
+    else
+      $slug=str_slug($slug,$separator);
+    
     return $this->vocabulary->create(['name' => $name,'slug' => $slug]);
   }
   
@@ -88,9 +54,7 @@ class Taxonomy {
     $vocabularies = $this->vocabulary->where('slug',null)->get();
 
     foreach($vocabularies as $vocabulary){
-      $new_name = strtolower($this->cleanAccentMark($vocabulary->name));
-      $new_name = str_replace(" ", $separator, $new_name);
-      $vocabulary->slug = $new_name;
+      $vocabulary->slug = str_slug($vocabulary->name,$separator);
       $vocabulary->save();
     }
     return true;
