@@ -26,16 +26,17 @@ class Taxonomy {
    *  Exception if the vocabulary name already exists.
    */
   public function createVocabulary($name,$slug=null,$separator="-") {
+    if(is_null($slug))
+      $slug=str_slug($name,$separator);
+    else
+      $slug=str_slug($slug,$separator);
+    
     if ($this->vocabulary->where('name', $name)->count()) {
       throw new Exceptions\VocabularyExistsException();
     }
     if (!is_null($slug)&&$this->vocabulary->where('slug', $slug)->count()) {
       throw new Exceptions\VocabularyExistsException();
     }  
-    if(is_null($slug))
-      $slug=str_slug($name,$separator);
-    else
-      $slug=str_slug($slug,$separator);
     
     return $this->vocabulary->create(['name' => $name,'slug' => $slug]);
   }
