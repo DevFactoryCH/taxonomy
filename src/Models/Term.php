@@ -1,32 +1,40 @@
-<?php namespace Devfactory\Taxonomy\Models;
+<?php
 
-class Term extends \Eloquent {
+namespace Devfactory\Taxonomy\Models;
 
-  protected $fillable = [
-    'name',
-    'vocabulary_id',
-    'parent',
-    'weight',
-  ];
+use Illuminate\Database\Eloquent\Model;
 
-	public static $rules = [
-		'name' => 'required'
-  ];
+class Term extends Model
+{
+    protected $fillable = [
+        'name',
+        'vocabulary_id',
+        'parent',
+        'weight',
+    ];
 
-  public function termRelation() {
-    return $this->morphMany('Devfactory\Taxonomy\Models\TermRelation', 'relationable');
-  }
+    public static $rules = [
+        'name' => 'required'
+    ];
 
-	public function vocabulary() {
-		return $this->belongsTo('Devfactory\Taxonomy\Models\Vocabulary');
-	}
+    public function termRelation()
+    {
+        return $this->morphMany(TermRelation::class, 'relationable');
+    }
 
-  public function childrens() {
-    return $this->hasMany('Devfactory\Taxonomy\Models\Term', 'parent', 'id')
-      ->orderBy('weight', 'ASC');
-  }
+    public function vocabulary()
+    {
+        return $this->belongsTo(Vocabulary::class);
+    }
 
-  public function parentTerm() {
-    return $this->hasOne('Devfactory\Taxonomy\Models\Term', 'id', 'parent');
-  }
+    public function childrens()
+    {
+        return $this->hasMany(Term::class, 'parent', 'id')
+            ->orderBy('weight', 'ASC');
+    }
+
+    public function parentTerm()
+    {
+        return $this->hasOne(Term::class, 'id', 'parent');
+    }
 }

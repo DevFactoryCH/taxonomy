@@ -1,23 +1,28 @@
-<?php namespace Devfactory\Taxonomy\Models;
+<?php
 
-class Vocabulary extends \Eloquent {
+namespace Devfactory\Taxonomy\Models;
 
-  protected $fillable = [
-    'name',
-  ];
+use Illuminate\Database\Eloquent\Model;
 
-  protected $table = 'vocabularies';
+class Vocabulary extends Model
+{
+    protected $fillable = [
+        'name',
+    ];
 
-  public $rules = [
-    'name' => 'required'
-  ];
+    protected $table = 'vocabularies';
 
-  public function terms() {
-    return $this->HasMany('Devfactory\Taxonomy\Models\Term');
-  }
+    public $rules = [
+        'name' => 'required'
+    ];
 
-  public function relations() {
-    return $this->HasMany('Devfactory\Taxonomy\Models\TermRelation');
-  }
+    public function terms()
+    {
+        return $this->hasMany(Term::class);
+    }
 
+    public function relations()
+    {
+        return $this->hasMany(TermRelation::class);
+    }
 }
